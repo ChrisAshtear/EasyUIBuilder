@@ -139,27 +139,29 @@ public class populateButtons : MonoBehaviour
             switch(b.onPress)
             {
                 case buttonFunction.changeMenu:
-                    button.onClick.AddListener(() => MenuManager.returnInstance().changeMenu(b.argument));
+                    button.onClick.AddListener(() => MenuManager.ins.changeMenu(b.argument));
                     break;
 
                 case buttonFunction.GoBack:
-                    button.onClick.AddListener(() => MenuManager.returnInstance().goBack());
+                    button.onClick.AddListener(() => MenuManager.ins.goBack());
                     break;
 
                 case buttonFunction.startGame:
-                    button.onClick.AddListener(() => MenuManager.returnInstance().startGame());
+                    button.onClick.AddListener(() => MenuManager.ins.startGame());
                     break;
 
                 case buttonFunction.Quit:
-                    button.onClick.AddListener(() => MenuManager.returnInstance().quitGame());
+                    button.onClick.AddListener(() => MenuManager.ins.quitGame());
                     break;
 
                 case buttonFunction.setPref:
                     string[] splitArg = b.argument.Split(':');
                     button.onClick.AddListener(() => PlayerPrefs.SetString(splitArg[0],splitArg[1]));
+                    button.onClick.AddListener(() => MenuManager.ins.processPrefs());
                     break;
                 case buttonFunction.Custom:
                     button.onClick.AddListener(()=>b.ev.Invoke());
+                    button.onClick.AddListener(() => MenuManager.ins.playSound(MenuManager.ins.buttonPress));
                     break;
 
 
