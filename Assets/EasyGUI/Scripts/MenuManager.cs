@@ -49,10 +49,12 @@ public class MenuManager : MonoBehaviour
         {
             case 0:
                 panels.hidePanel("GamePanel");
+                panels.showPanel("BG");
                 break;
 
             case 1:
                 panels.showPanel("GamePanel");
+                panels.hidePanel("BG");
                 break;
         }
 
