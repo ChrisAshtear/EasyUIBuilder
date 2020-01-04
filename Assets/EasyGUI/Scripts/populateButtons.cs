@@ -23,11 +23,11 @@ public class ButtonProps
 
 #if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(ButtonProps))]
-public class IngredientDrawer : PropertyDrawer
+public class ButtonDrawer : PropertyDrawer
 {
     private float xOffset = 0;
     private float yHeight = 16;
-    private float expandedHeight = 150;
+    private float expandedHeight = 50;//extra space for event control +/- buttons
     // Draw the property inside the given rect
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -35,7 +35,7 @@ public class IngredientDrawer : PropertyDrawer
         SerializedProperty p = property.FindPropertyRelative("onPress");
         if (p.intValue == 4)//custom prop
         {
-            return expandedHeight;
+            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev")) + expandedHeight ;
         }
         else
         {
@@ -69,7 +69,7 @@ public class IngredientDrawer : PropertyDrawer
         if(p.intValue == 4)//custom prop
         {
             var eventRect = new Rect(position.x, position.y+yHeight, position.width, position.height-yHeight);
-            position.height = 200;
+            position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev"));
             EditorGUI.PropertyField(eventRect, property.FindPropertyRelative("ev"), GUIContent.none);
 
         }
@@ -103,16 +103,8 @@ public class IngredientDrawer : PropertyDrawer
 
 public class populateButtons : MonoBehaviour
 {
-    //array string name of buttons
-    //array event , func to call on press
 
-
-    //dictionary, name->event to call
-    //dictionary name-> color for button center
-
-    //game object ref for layout group.
-
-    public ButtonProps[] props;
+    public List<ButtonProps> props;
     public GameObject layoutGroup; // where to place generated buttons
     public GameObject prefab;//button prefab
 

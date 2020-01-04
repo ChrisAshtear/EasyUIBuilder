@@ -44,6 +44,8 @@ public class MenuManager : MonoBehaviour
 
     private void OnLevelWasLoaded(int level)
     {
+        audio = GetComponent<AudioSource>();
+        panels = gameObject.GetComponent<ShowPanels>();
         MenuManager.ins = this;
         switch (level)
         {
