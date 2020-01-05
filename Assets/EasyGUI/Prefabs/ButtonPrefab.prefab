@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6226516285635520980}
   - component: {fileID: 6371548943929519107}
   m_Layer: 5
-  m_Name: Credits 1
+  m_Name: ButtonPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 6226516287172413923}
   - component: {fileID: 6226516287172413920}
   m_Layer: 5
-  m_Name: ResumeText
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

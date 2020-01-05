@@ -30,6 +30,31 @@ public class ButtonDrawer : PropertyDrawer
     private float expandedHeight = 50;//extra space for event control +/- buttons
     // Draw the property inside the given rect
 
+    // Have we loaded the prefs yet
+    private static bool prefsLoaded = false;
+
+    // The Preferences
+    public static bool boolPreference = false;
+
+    // Add preferences section named "My Preferences" to the Preferences window
+    [PreferenceItem("My Preferences")]
+    public static void PreferencesGUI()
+    {
+        // Load the preferences
+        if (!prefsLoaded)
+        {
+            boolPreference = EditorPrefs.GetBool("BoolPreferenceKey", false);
+            prefsLoaded = true;
+        }
+
+        // Preferences GUI
+        boolPreference = EditorGUILayout.Toggle("Bool Preference", boolPreference);
+
+        // Save the preferences
+        if (GUI.changed)
+            EditorPrefs.SetBool("BoolPreferenceKey", boolPreference);
+    }
+
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         SerializedProperty p = property.FindPropertyRelative("onPress");
@@ -43,6 +68,109 @@ public class ButtonDrawer : PropertyDrawer
         }
     }
 
+    [MenuItem("GameObject/EasyUIBuilder/MenuButtons-Horizontal", false, 10)]
+    static void CreateHorizontalButtons(MenuCommand menuCommand)
+    {
+        // Create a custom game object
+        GameObject go = new GameObject("MenuButtons");
+        go.AddComponent<populateButtons>();
+        HorizontalLayoutGroup h = go.AddComponent<HorizontalLayoutGroup>();
+
+        h.spacing = 64;
+        h.childControlWidth = true;
+        h.childControlHeight = true;
+        h.childForceExpandWidth = true;
+        h.childForceExpandHeight = true;
+        h.childAlignment = TextAnchor.UpperLeft;
+
+        // Ensure it gets reparented if this was a context click (otherwise does nothing)
+        GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+        // Register the creation in the undo system
+        Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
+        Selection.activeObject = go;
+    }
+
+    [MenuItem("GameObject/EasyUIBuilder/MenuButtons-Vertical", false, 10)]
+    static void CreateVerticalButtons(MenuCommand menuCommand)
+    {
+        // Create a custom game object
+        GameObject go = new GameObject("MenuButtons");
+        go.AddComponent<populateButtons>();
+        VerticalLayoutGroup v = go.AddComponent<VerticalLayoutGroup>();
+
+        v.spacing = 80;
+        v.childControlWidth = true;
+        v.childForceExpandWidth = true;
+        v.childForceExpandHeight = false;
+        v.childAlignment = TextAnchor.UpperLeft;
+
+        // Ensure it gets reparented if this was a context click (otherwise does nothing)
+        GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+        // Register the creation in the undo system
+        Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
+        Selection.activeObject = go;
+    }
+    
+    static void matchObjSizeWithParent(GameObject child, GameObject parent)
+    {
+        RectTransform rectTransform = child.GetComponent<RectTransform>();
+
+        rectTransform.position = parent.GetComponent<RectTransform>().position;
+        rectTransform.anchorMin = new Vector2(0, 0);
+
+        rectTransform.anchorMax = new Vector2(1, 1);
+
+        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+    }
+    /*
+    [MenuItem("GameObject/EasyUIBuilder/Basic UI", false, 10)]
+    static void CreateUI(MenuCommand menuCommand)
+    {
+        // Create a custom game object
+        GameObject go = new GameObject("MenuUI");
+
+        Canvas c = go.AddComponent<Canvas>();
+        CanvasScaler cs = go.AddComponent<CanvasScaler>();
+        cs.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        go.AddComponent<CanvasGroup>();
+        go.AddComponent<GraphicRaycaster>();
+        c.renderMode = RenderMode.ScreenSpaceOverlay;
+        go.AddComponent<AudioSource>();
+        go.AddComponent<MenuManager>();
+        go.AddComponent<DontDestroy>();
+        go.AddComponent<GameManager>();
+
+        GameObject m = new GameObject("MenuPanel");
+        m.transform.SetParent(go.transform);
+        m.AddComponent<Image>();
+        matchObjSizeWithParent(m, go);
+        
+
+        GameObject t = new GameObject("Title");
+        t.AddComponent<Text>().text = "GAME";
+        t.transform.SetParent(m.transform);
+        matchObjSizeWithParent(t, m);
+
+        GameObject mb = new GameObject("MenuButtons");
+        mb.transform.parent = m.transform;
+        mb.AddComponent<populateButtons>();
+        VerticalLayoutGroup v = mb.AddComponent<VerticalLayoutGroup>();
+
+        v.spacing = 80;
+        v.childControlWidth = true;
+        v.childForceExpandWidth = true;
+        v.childForceExpandHeight = false;
+        v.childAlignment = TextAnchor.UpperLeft;
+
+        matchObjSizeWithParent(mb, m);
+
+        // Ensure it gets reparented if this was a context click (otherwise does nothing)
+        GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+        // Register the creation in the undo system
+        Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
+        Selection.activeObject = go;
+    }
+    */
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // Using BeginProperty / EndProperty on the parent property means that
@@ -108,6 +236,14 @@ public class populateButtons : MonoBehaviour
     public GameObject layoutGroup; // where to place generated buttons
     public GameObject prefab;//button prefab
 
+    void Reset()
+    {
+        props = new List<ButtonProps>();
+        props.Add(new ButtonProps());
+        props[0].name = "Button";
+        props[0].color = Color.grey;
+        layoutGroup = gameObject;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -126,12 +262,12 @@ public class populateButtons : MonoBehaviour
                 obj.AddComponent<UIselectOnEnable>();
             }
             
-            obj.transform.Find("ResumeText").GetComponent<Text>().text = b.name;
+            obj.transform.Find("Label").GetComponent<Text>().text = b.name;
             obj.transform.Find("ButtonCenter").GetComponent<Image>().color = b.color;
             switch(b.onPress)
             {
                 case buttonFunction.changeMenu:
-                    button.onClick.AddListener(() => MenuManager.ins.changeMenu(b.argument));
+                    button.onClick.AddListener(() => MenuManager.ins.changeMenu(b.argument,b.AC));
                     break;
 
                 case buttonFunction.GoBack:
@@ -153,7 +289,10 @@ public class populateButtons : MonoBehaviour
                     break;
                 case buttonFunction.Custom:
                     button.onClick.AddListener(()=>b.ev.Invoke());
-                    button.onClick.AddListener(() => MenuManager.ins.playSound(MenuManager.ins.buttonPress));
+                    if(b.AC == null)
+                    {
+                        button.onClick.AddListener(() => MenuManager.ins.playSound(MenuManager.ins.buttonPress));
+                    }
                     break;
 
 

@@ -15,15 +15,17 @@ public class MenuManager : MonoBehaviour
 
     public static MenuManager ins;
 
-    public string currentPanel = "Main";
-    public string prevPanel;
-    public AudioClip menuSound;
+    public string currentPanel = "MenuPanel";
+    private string prevPanel;
     public AudioClip buttonPress;
-    public string pausePanelName;
+    public AudioClip buttonPressCancel;
+    public string pausePanelName = "PausePanel";
 
     private AudioSource audio;
 
     public static bool gameRunning = false;
+
+
 
     public GameObject returnCurrentPanel()
     {
@@ -33,7 +35,7 @@ public class MenuManager : MonoBehaviour
 	public void quitGame()
 	{
         Invoke("exit", 1);
-        audio.PlayOneShot(menuSound);
+        audio.PlayOneShot(buttonPress);
         panels.hidePanel(currentPanel, true);
     }
 
@@ -62,10 +64,15 @@ public class MenuManager : MonoBehaviour
 
     }
 
-    public void changeMenu(string panel)
+    public void changeMenu(string panel,AudioClip pressSound = null)
     {
         audio.Stop();
-        audio.PlayOneShot(menuSound);
+        if(pressSound == null)
+        {
+            pressSound = buttonPress;
+        }
+
+        audio.PlayOneShot(pressSound);
         prevPanel = currentPanel;
         
         panels.hidePanel(currentPanel,true);
@@ -78,7 +85,7 @@ public class MenuManager : MonoBehaviour
         //hierarchical menu needs to be set for this to work right
         if(prevPanel != null)
         {
-            changeMenu(prevPanel);
+            changeMenu(prevPanel,buttonPressCancel);
         }
         
     }
@@ -126,7 +133,7 @@ public class MenuManager : MonoBehaviour
 
     public void toggleUIelement(GameObject obj)
     {
-        obj.SetActive(!obj.active);
+        obj.SetActive(!obj.activeSelf);
     }
 
     public static void startGame(string x)
@@ -136,7 +143,7 @@ public class MenuManager : MonoBehaviour
 
     public void startGame()
     {
-        audio.PlayOneShot(menuSound);
+        audio.PlayOneShot(buttonPress);
         panels.hidePanel(currentPanel, true);
         Invoke("doStart", 1);
     }
@@ -158,7 +165,7 @@ public class MenuManager : MonoBehaviour
     public void Restart()
     {
         UnPause();
-        SceneManager.LoadScene(Application.loadedLevel);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 
