@@ -7,16 +7,16 @@ using Unity;
 using UnityEngine.Events;
 using UnityEditor;
 
-public enum buttonFunction { changeMenu, startGame, Quit, setPref,Custom,GoBack };
+public enum buttonFunction { changeMenu, startGame, Quit, setPref,Custom,GoBack , OpenWeb };
 
 // Custom serializable class
 [Serializable]
 public class ButtonProps
 {
-    public string name;
-    public buttonFunction onPress;
+    public string name = "Name";
+    public buttonFunction onPress = buttonFunction.startGame;
     public string argument;
-    public Color32 color = new Color32(0,0,0,255);
+    public Color32 color = Color.grey;
     public AudioClip AC;
     public UnityEvent ev;
 }
@@ -26,7 +26,7 @@ public class ButtonProps
 public class ButtonDrawer : PropertyDrawer
 {
     private float xOffset = 0;
-    private float yHeight = 16;
+    private float yHeight = 32;
     private float expandedHeight = 50;//extra space for event control +/- buttons
     // Draw the property inside the given rect
 
@@ -122,8 +122,8 @@ public class ButtonDrawer : PropertyDrawer
 
         rectTransform.pivot = new Vector2(0.5f, 0.5f);
     }
-    /*
-    [MenuItem("GameObject/EasyUIBuilder/Basic UI", false, 10)]
+    
+    [MenuItem("GameObject/EasyUIBuilder/UI Root", false, 10)]
     static void CreateUI(MenuCommand menuCommand)
     {
         // Create a custom game object
@@ -136,50 +136,51 @@ public class ButtonDrawer : PropertyDrawer
         go.AddComponent<GraphicRaycaster>();
         c.renderMode = RenderMode.ScreenSpaceOverlay;
         go.AddComponent<AudioSource>();
-        go.AddComponent<MenuManager>();
+        MenuManager m =go.AddComponent<MenuManager>();
         go.AddComponent<DontDestroy>();
         go.AddComponent<GameManager>();
 
-        GameObject m = new GameObject("MenuPanel");
-        m.transform.SetParent(go.transform);
-        m.AddComponent<Image>();
-        matchObjSizeWithParent(m, go);
-        
-
-        GameObject t = new GameObject("Title");
-        t.AddComponent<Text>().text = "GAME";
-        t.transform.SetParent(m.transform);
-        matchObjSizeWithParent(t, m);
-
-        GameObject mb = new GameObject("MenuButtons");
-        mb.transform.parent = m.transform;
-        mb.AddComponent<populateButtons>();
-        VerticalLayoutGroup v = mb.AddComponent<VerticalLayoutGroup>();
-
-        v.spacing = 80;
-        v.childControlWidth = true;
-        v.childForceExpandWidth = true;
-        v.childForceExpandHeight = false;
-        v.childAlignment = TextAnchor.UpperLeft;
-
-        matchObjSizeWithParent(mb, m);
-
+        m.currentPanel = "";
+        m.buttonPress = projectHandler.pData.menuConfirm;
+        m.buttonPressCancel = projectHandler.pData.menuCancel;
         // Ensure it gets reparented if this was a context click (otherwise does nothing)
         GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
         // Register the creation in the undo system
         Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
         Selection.activeObject = go;
     }
-    */
+
+    [MenuItem("GameObject/EasyUIBuilder/Menu Panel", false, 10)]
+    static void CreatePanel(MenuCommand menuCommand)
+    {
+        
+        GameObject m = new GameObject("MenuPanel");
+        GameObjectUtility.SetParentAndAlign(m, menuCommand.context as GameObject);
+        m.AddComponent<Image>();
+        matchObjSizeWithParent(m, menuCommand.context as GameObject);
+
+        Animator anim = m.AddComponent<Animator>();
+        doAnimAndSleep doanim = m.AddComponent<doAnimAndSleep>();
+
+        m.AddComponent<PanelInfo>();
+
+        doanim.anim = anim;
+        doanim.animTrigger = "menuOut";
+        doanim.delay = 0.7f;
+
+    }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // Using BeginProperty / EndProperty on the parent property means that
         // prefab override logic works on the entire property.
         EditorGUI.BeginProperty(position, label, property);
 
+        
         // Draw label
         position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-
+       // EditorGUIUtility.labelWidth = 14f;
+       // position.width /= 2f;
         // Don't make child fields be indented
         var indent = EditorGUI.indentLevel;
         EditorGUI.indentLevel = 0;
@@ -198,19 +199,41 @@ public class ButtonDrawer : PropertyDrawer
         {
             var eventRect = new Rect(position.x, position.y+yHeight, position.width, position.height-yHeight);
             position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev"));
+            
+
+            var labelRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
+            EditorGUI.PrefixLabel(labelRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("OnPress : "));
+
+            eventRect.y += 16;
             EditorGUI.PropertyField(eventRect, property.FindPropertyRelative("ev"), GUIContent.none);
 
         }
         else if(p.intValue == 0 || p.intValue == 3)
         {
+            EditorGUI.PrefixLabel(nameRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Option Field"));
+            nameRect.y += 16;
+            nameRect.height -= 16;
             EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("argument"), GUIContent.none);
         }
 
+        EditorGUI.PrefixLabel(acRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Custom Sound"));
+        acRect.y += 16;
+        acRect.height -= 16; 
         EditorGUI.PropertyField(acRect, property.FindPropertyRelative("AC"), GUIContent.none);
-        
 
+
+        EditorGUI.PrefixLabel(amountRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Button Name"));
+        amountRect.y += 16;
+        amountRect.height -= 16;
         EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("name"), GUIContent.none);
+
+        EditorGUI.PrefixLabel(colorRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Color"));
+        colorRect.y += 16;
+        colorRect.height -= 16;
         EditorGUI.PropertyField(colorRect, property.FindPropertyRelative("color"), GUIContent.none);
+        EditorGUI.PrefixLabel(unitRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Button Type"));
+        unitRect.y += 16;
+        unitRect.height -= 16;
         EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("onPress"), GUIContent.none);
         
 
@@ -243,6 +266,8 @@ public class populateButtons : MonoBehaviour
         props[0].name = "Button";
         props[0].color = Color.grey;
         layoutGroup = gameObject;
+        projectHandler.init();
+        prefab = projectHandler.pData.defaultButton;
     }
     // Start is called before the first frame update
     void Start()
@@ -295,6 +320,9 @@ public class populateButtons : MonoBehaviour
                     }
                     break;
 
+                case buttonFunction.OpenWeb:
+                    button.onClick.AddListener(() => MenuManager.returnInstance().openWeb(b.argument));
+                    break;
 
 
             }

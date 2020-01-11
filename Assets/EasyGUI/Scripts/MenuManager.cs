@@ -82,10 +82,20 @@ public class MenuManager : MonoBehaviour
 
     public void goBack()
     {
-        //hierarchical menu needs to be set for this to work right
-        if(prevPanel != null)
+        GameObject panel = returnCurrentPanel();
+
+        PanelInfo pInfo = panel.GetComponent<PanelInfo>();
+
+        string targetPanel = prevPanel;//just returns last menu game was on
+
+        if(pInfo != null && pInfo.parentPanel != null) // check PanelInfo property, this allows hierachical menus.
         {
-            changeMenu(prevPanel,buttonPressCancel);
+            targetPanel = pInfo.parentPanel.name;
+        }
+
+        if(targetPanel != null)
+        {
+            changeMenu(targetPanel,buttonPressCancel);
         }
         
     }
@@ -160,6 +170,13 @@ public class MenuManager : MonoBehaviour
         gameRunning = false;
         SceneManager.LoadScene(0);
         panels.showPanel("MenuPanel", true);
+    }
+
+    public void openWeb(string address)
+    {
+        audio.Stop();
+        audio.PlayOneShot(buttonPress);
+        Application.OpenURL(address);
     }
 
     public void Restart()

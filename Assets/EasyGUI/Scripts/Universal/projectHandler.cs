@@ -16,6 +16,15 @@ public class projectHandler : MonoBehaviour
         loadData();
     }
 
+    public static void init()
+    {
+        projectHandler.pData = Resources.Load("ProjectData") as projData;
+        if (pData != null)
+        {
+            m_Loaded = true;
+        }
+    }
+
     public void loadData()
     {
         projectHandler.pData = Resources.Load("ProjectData") as projData;
