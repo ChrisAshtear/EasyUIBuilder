@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class projectHandler : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class projectHandler : MonoBehaviour
     private void Start()
     {
         ins = this;
-        loadData();
+        Invoke("loadData", 0.5f);
     }
 
     public static void init()
@@ -23,6 +24,12 @@ public class projectHandler : MonoBehaviour
         {
             m_Loaded = true;
         }
+        else
+        {
+#if UNITY_EDITOR
+            createData();
+#endif
+        }
     }
 
     public void loadData()
@@ -30,7 +37,9 @@ public class projectHandler : MonoBehaviour
         projectHandler.pData = Resources.Load("ProjectData") as projData;
         if(pData == null)
         {
-            loadData();
+#if UNITY_EDITOR
+            createData();
+#endif
         }
         else
         {
@@ -39,6 +48,18 @@ public class projectHandler : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
+    public static void createData()
+    {
+        projData pDat = (projData)ScriptableObject.CreateInstance(typeof(projData));
+        pDat.defaultButton = (GameObject)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("ButtonPrefab")[0]),typeof(UnityEngine.GameObject));
+        pDat.menuConfirm = (AudioClip)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("t:AudioClip")[0]),typeof(UnityEngine.AudioClip));
+        pDat.menuCancel = (AudioClip)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("t:AudioClip")[0]),typeof(UnityEngine.AudioClip));
+        pData = pDat;
+        AssetDatabase.CreateAsset(pDat, "Assets/Resources/ProjectData.asset");
+        
+    }
+#endif
     public static int returnInt(string valName)
     {
         int val = (int)pData.GetType().GetField(valName).GetValue(pData);

@@ -11,16 +11,14 @@
 public class projData : ScriptableObject
 {
     [Header("Project Data")]
-    public string gameName;
+    public string gameName = "EasyUI";
     //public MenuManager menu;
     [TextArea(6,20)]
-    public string credits;
-
-    [Header("Audio")]
-    public AudioClip menuConfirm;
-    public AudioClip menuCancel;
+    public string credits = "";
 
     [Header("Defaults")]
     public GameObject defaultButton;
+    public AudioClip menuConfirm;
+    public AudioClip menuCancel;
 
 }

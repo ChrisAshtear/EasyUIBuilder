@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94989ce3a7058634bb6a31def27deda4, type: 3}
   m_Name: ProjectData
   m_EditorClassIdentifier: 
-  gameName: EasyUI
+  gameName: EasyUIBuilder
   credits: '
 
     Code: Ryan Wine'
