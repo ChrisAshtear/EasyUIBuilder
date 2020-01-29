@@ -16,9 +16,13 @@ public class projData : ScriptableObject
     [TextArea(6,20)]
     public string credits = "";
 
-    [Header("Defaults")]
+    [Header("SFX")]
     public GameObject defaultButton;
     public AudioClip menuConfirm;
     public AudioClip menuCancel;
+
+    [Header("Music")]
+    public AudioClip menuMusic;
+    public AudioClip gameMusic;
 
 }

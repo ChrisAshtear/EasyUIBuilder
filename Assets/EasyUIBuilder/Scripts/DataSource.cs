@@ -12,6 +12,9 @@ public class DataSource : ScriptableObject
     protected bool dataReady = false;
     public DataType type;
 
+    public delegate void DataReadyHandler();
+    public event DataReadyHandler onDataReady;
+
     protected List<Dictionary<string, string>> data;
     public DataSource()
     {
@@ -23,9 +26,22 @@ public class DataSource : ScriptableObject
 
     }
 
+    public bool isDataReady()
+    {
+        return dataReady;
+    }
+
     public virtual void LoadData()
     {
+    }
 
+    protected void doOnDataReady()
+    {
+        if(onDataReady != null)
+        {
+            onDataReady();
+        }
+        
     }
 
     public virtual Dictionary<string,fieldType> getFields()

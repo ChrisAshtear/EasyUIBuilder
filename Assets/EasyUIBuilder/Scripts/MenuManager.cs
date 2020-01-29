@@ -17,17 +17,19 @@ public class MenuManager : MonoBehaviour
 
     [HideInInspector] public string currentPanel = "MenuPanel";
     private string prevPanel;
-    public AudioClip buttonPress;
-    public AudioClip buttonPressCancel;
+
     public GameObject pausePanel;
     [HideInInspector] public string pausePanelName = "PausePanel";
 
+    protected Dictionary<string, AudioClip> sounds;
+
 
     private AudioSource audio;
+    private AudioSource music;
 
     public static bool gameRunning = false;
 
-
+    
 
     public GameObject returnCurrentPanel()
     {
@@ -37,7 +39,7 @@ public class MenuManager : MonoBehaviour
 	public void quitGame()
 	{
         Invoke("exit", 1);
-        audio.PlayOneShot(buttonPress);
+        audio.PlayOneShot(projectHandler.pData.menuCancel);
         panels.hidePanel(currentPanel, true);
     }
 
@@ -57,11 +59,13 @@ public class MenuManager : MonoBehaviour
         {
             case 0:
                 panels.hidePanel("GamePanel");
+                panels.hidePanel("GameOverPanel");
                 panels.showPanel("BG");
                 break;
 
             case 1:
                 panels.showPanel("GamePanel");
+                panels.hidePanel("GameOverPanel");
                 panels.hidePanel("BG");
                 break;
         }
@@ -73,7 +77,7 @@ public class MenuManager : MonoBehaviour
         audio.Stop();
         if(pressSound == null)
         {
-            pressSound = buttonPress;
+            pressSound = projectHandler.pData.menuConfirm;
         }
 
         audio.PlayOneShot(pressSound);
@@ -99,14 +103,33 @@ public class MenuManager : MonoBehaviour
 
         if(targetPanel != null)
         {
-            changeMenu(targetPanel,buttonPressCancel);
+            changeMenu(targetPanel, projectHandler.pData.menuCancel);
         }
         
+    }
+
+    public void changeMusic(AudioClip m)
+    {
+        music.Stop();
+        if(m == null)
+        {
+            return;
+        }
+        music.clip = m;
+        music.loop = true;
+        music.Play();
     }
     
     public void Start()
     {
-        audio = GetComponent<AudioSource>();
+        AudioSource[] audios = GetComponents<AudioSource>();
+
+        audio = audios[0];
+        music = audios[1];
+        projectHandler.ins.onDataReady += finishInit;
+        
+
+        //use an event to change music after pdata is loaded?
         MenuManager.ins = returnInstance();
         panels = gameObject.GetComponent<ShowPanels>();
 
@@ -122,8 +145,12 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    
+    public void finishInit()
+    {
+        changeMusic(projectHandler.pData.menuMusic);
+    }
 
+    
     public void setVolume()
     {
         if (PlayerPrefs.GetString("Muted", "no") != "yes")
@@ -138,16 +165,33 @@ public class MenuManager : MonoBehaviour
 
     public void processPrefs()
     {
-        playSound(buttonPress);
+        playSound(projectHandler.pData.menuConfirm);
         setVolume();
     }
 
     public void playSound(AudioClip clip)
     {
         audio.Stop();
+        if(clip == null)
+        { return; }
         audio.PlayOneShot(clip);
     }
-    
+
+    public static void playSound(string sfxName)
+    {
+        ins.audio.Stop();
+        ins.audio.PlayOneShot(ins.getSound(sfxName));
+    }
+
+    public AudioClip getSound(string name)
+    {
+        AudioClip c;
+
+        sounds.TryGetValue(name, out c);
+
+        return c ?? projectHandler.pData.menuConfirm;
+    }
+
 
     public void toggleUIelement(GameObject obj)
     {
@@ -161,7 +205,7 @@ public class MenuManager : MonoBehaviour
 
     public void startGame()
     {
-        audio.PlayOneShot(buttonPress);
+        audio.PlayOneShot(projectHandler.pData.menuConfirm);
         panels.hidePanel(currentPanel, true);
         Invoke("doStart", 1);
     }
@@ -169,6 +213,7 @@ public class MenuManager : MonoBehaviour
     public void doStart()
     {
         SceneManager.LoadScene(1);
+        changeMusic(projectHandler.pData.gameMusic);
         MenuManager.gameRunning = true;
     }
 
@@ -177,20 +222,28 @@ public class MenuManager : MonoBehaviour
         //UnPause();
         gameRunning = false;
         SceneManager.LoadScene(0);
-        panels.showPanel("MenuPanel", true);
+        changeMusic(projectHandler.pData.menuMusic);
+        //panels.showPanel("MenuPanel", true);
+        changeMenu("MenuPanel");
     }
 
     public void openWeb(string address)
     {
         audio.Stop();
-        audio.PlayOneShot(buttonPress);
+        audio.PlayOneShot(projectHandler.pData.menuConfirm);
+#if !UNITY_WEBGL
         Application.OpenURL(address);
+#endif
+#if UNITY_WEBGL
+        Application.ExternalEval("window.open(\"" + address + "\")");
+#endif
     }
 
     public void Restart()
     {
         UnPause();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        MenuManager.ins.changeMusic(projectHandler.pData.gameMusic);
     }
 
 

@@ -11,34 +11,43 @@ public class projectHandler : MonoBehaviour
     private string pName;
     public static projectHandler ins;
 
-    private void Start()
+    public delegate void DataReady();
+    public event DataReady onDataReady;
+
+    private void Awake()
     {
         ins = this;
-        Invoke("loadData", 0.5f);
+        projectHandler.pData = Resources.Load("ProjectData") as projData;
+        Invoke("doInit", 0.5f);
+        //init();
     }
 
+    public void doInit()
+    {
+        projectHandler.init();
+        onDataReady();
+    }
     public static void init()
     {
-        projectHandler.pData = Resources.Load("ProjectData") as projData;
         if (pData != null)
         {
             m_Loaded = true;
         }
         else
         {
+
 #if UNITY_EDITOR
-            createData();
+            //createData();
 #endif
         }
     }
 
     public void loadData()
     {
-        projectHandler.pData = Resources.Load("ProjectData") as projData;
         if(pData == null)
         {
 #if UNITY_EDITOR
-            createData();
+            //createData();
 #endif
         }
         else

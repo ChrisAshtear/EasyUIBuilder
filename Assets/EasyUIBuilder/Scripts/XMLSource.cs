@@ -39,6 +39,7 @@ public class XMLDataSource : DataSource
             if(data.Count > 0)
             {
                 dataReady = true;
+                doOnDataReady();
             }
             getFieldFromAllItems("Description");
             getFieldFromItemID(2, "Hulld");//move names to lowercase.
@@ -46,6 +47,8 @@ public class XMLDataSource : DataSource
        
             
     }
+
+    
 
     public override Dictionary<string,fieldType> getFields()
     {
@@ -106,69 +109,3 @@ public class XMLDataSource : DataSource
         return "";
     }
 }
-
-
-/*
-using System.Linq;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.Drawing;
-
-public struct LevelInfo
-{
-    public Vector2 icoPos;
-    public string[] position;
-    public string name;
-    public string fileName;
-    public int tileID;
-    public string[] links;
-}
-///<summary>
-///Direct C# representation of an XML world file for Boxxy
-///</summary>
-public struct WorldFile
-{
-    // Attributes
-    public string name;
-    public string description;
-    public string author;
-
-    public string path;
-
-    public string indexName;
-    public string prefix;// temporary prefix for all image files so we know how to get to them
-
-    //public List<LevelInfo> levels;
-
-    public LevelInfo[] levels;
-
-    public WorldFile(XElement element, string assetPath)
-    {
-        // Attributes
-        name = (string)element.Attribute("name");
-        description = (string)element.Attribute("description");
-        author = (string)element.Attribute("author");
-        path = assetPath;
-        indexName = "";
-        prefix = (string)element.Attribute("prefix");
-        // Elements
-        levels = element
-            .Elements("levelList")
-            ?.Elements("level")
-            .Select(p => new LevelInfo
-            {
-                name = (string)p.Attribute("name"),
-                fileName = (string)p.Attribute("fileName"),
-                icoPos = new Vector2((int)p.Attribute("icoPosX"), (int)p.Attribute("icoPosY")),
-                position = ((string)p.Attribute("icoPos")).Split(','),
-                tileID = (int)p.Attribute("tileID"),
-                links = ((string)p.Attribute("links")).Split(','),
-            })
-            .ToArray();
-    }
-
-
-}
-*/

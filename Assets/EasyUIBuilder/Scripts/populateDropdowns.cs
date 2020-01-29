@@ -6,7 +6,7 @@ using System;
 using Unity;
 using UnityEngine.Events;
 using UnityEditor;
-
+/*
 public enum buttonFunction { changeMenu, startGame, Quit, setPref,Custom,GoBack , OpenWeb };
 
 // Custom serializable class
@@ -23,7 +23,7 @@ public class ButtonProps
 
 #if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(ButtonProps))]
-public class ButtonDrawer : PropertyDrawer
+public class DropDownDrawer : PropertyDrawer
 {
     private float xOffset = 0;
     private float yHeight = 32;
@@ -141,7 +141,8 @@ public class ButtonDrawer : PropertyDrawer
         go.AddComponent<GameManager>();
 
         m.currentPanel = "";
-
+        m.buttonPress = projectHandler.pData.menuConfirm;
+        m.buttonPressCancel = projectHandler.pData.menuCancel;
         // Ensure it gets reparented if this was a context click (otherwise does nothing)
         GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
         // Register the creation in the undo system
@@ -251,7 +252,7 @@ public class ButtonDrawer : PropertyDrawer
 }
 #endif
 
-public class populateButtons : MonoBehaviour
+public class populateDropDowns : MonoBehaviour
 {
 
     public List<ButtonProps> props;
@@ -315,7 +316,7 @@ public class populateButtons : MonoBehaviour
                     button.onClick.AddListener(()=>b.ev.Invoke());
                     if(b.AC == null)
                     {
-                        button.onClick.AddListener(() => MenuManager.ins.playSound(projectHandler.pData.menuConfirm));
+                        button.onClick.AddListener(() => MenuManager.ins.playSound(MenuManager.ins.buttonPress));
                     }
                     break;
 
@@ -342,3 +343,4 @@ public class populateButtons : MonoBehaviour
         
     }
 }
+*/

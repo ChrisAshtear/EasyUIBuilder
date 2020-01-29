@@ -14,9 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XMLDataSource
   sourceName: ships.xml
   addressOfData: 
-  dataReady: 0
   type: 0
-  sourceName: 
-  addressOfData: 
-  dataReady: 0
-  type: 0
+  elementToLoad: Ship
