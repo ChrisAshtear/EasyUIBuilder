@@ -17,12 +17,15 @@ public class FillDropboxFromSource : MonoBehaviour
     public DataSource data;
     public string chosenField;
     public bool showLabel = true;
+    public string labelText = "";
 
     Text label;
 
 
 
     displayObjDetails display;
+
+    public listObjProps displayObj;
     // Start is called before the first frame update
 
     //SHOW # items. adjust how big viewport is.
@@ -51,9 +54,13 @@ public class FillDropboxFromSource : MonoBehaviour
         label = gameObject.transform.Find("Label").GetComponent<Text>();
         label.enabled = showLabel;
 
-        if (showLabel)
+        if (showLabel && labelText == "")
         {
             label.text = chosenField;
+        }
+        else
+        {
+            label.text = labelText;
         }
 
         if (data.isDataReady())
@@ -108,6 +115,29 @@ public class FillDropboxFromSource : MonoBehaviour
         }
         display.displayCode = display.displayCode.Substring(0, display.displayCode.Length - 2);
         display.parseFields();*/
+    }
+
+    public void displayValFields(int chosen)
+    {
+        GenericDataHandler datah = GetComponent<GenericDataHandler>();
+        listObjProps uiObject = displayObj;
+
+
+        Dictionary<string, string> opts = data.getFieldFromAllItemsKeyed(chosenField);
+        string chosenVal = dropdown.options[chosen].text;
+        string key = opts[chosenVal];
+
+
+        Dictionary<string, string> dat = data.getFieldsFromItemID(key);
+
+        uiObject.resetVals();
+        foreach (KeyValuePair<string, string> entry in dat)
+        {
+            displayObj.createText(entry.Key, entry.Value);
+
+        }
+
+
     }
 
     // Update is called once per frame

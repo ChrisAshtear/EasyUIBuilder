@@ -13,12 +13,14 @@ public enum dropdownFunction { showDetails, Form };
 [Serializable]
 public class DropDownProps
 {
-    public string name = "Name";
+    public string label = "";
     public dropdownFunction onSelect = dropdownFunction.Form;
     public Color32 color = Color.grey;
     public UnityEvent ev;
     public DataSource data;
     public string field;
+    //public string option;
+    public listObjProps displayObj;
     public int fieldIdx;
 }
 
@@ -89,7 +91,8 @@ public class DropDownDrawer : PropertyDrawer
 
         xOffset = position.x;
         // Calculate rects
-        var amountRect = getRect(100,position);
+        var labelRect = getRect(50,position);
+        var amountRect = getRect(100, position);
         var unitRect = getRect(100, position);
         var colorRect = getRect(100, position);
         var nameRect = getRect(200, position);
@@ -112,6 +115,9 @@ public class DropDownDrawer : PropertyDrawer
         SerializedProperty userIndexProperty = property.FindPropertyRelative("fieldIdx");
         SerializedProperty fieldSelection = property.FindPropertyRelative("field");
 
+        GUIutil.doPrefixLabel(ref labelRect, "Field");
+        EditorGUI.PropertyField(labelRect, property.FindPropertyRelative("label"), GUIContent.none);
+
         EditorGUI.BeginChangeCheck();
         GUIutil.doPrefixLabel(ref unitRect, "Field");
         _choiceIndex = EditorGUI.Popup(unitRect, userIndexProperty.intValue, allFields.ToArray());
@@ -123,9 +129,9 @@ public class DropDownDrawer : PropertyDrawer
 
         //when changing fields, field is first set to null.
         //keep a list of choices, when field is null, reset choices. if list is null, get choices.
-
+        SerializedProperty p = property.FindPropertyRelative("onSelect");
         // Draw fields - passs GUIContent.none to each so they are drawn without labels
-        //SerializedProperty p = property.FindPropertyRelative("onPress");
+        //
         /*if(p.intValue == 4)//custom prop
         {
             var eventRect = new Rect(position.x, position.y+yHeight, position.width, position.height-yHeight);
@@ -139,17 +145,15 @@ public class DropDownDrawer : PropertyDrawer
             EditorGUI.PropertyField(eventRect, property.FindPropertyRelative("ev"), GUIContent.none);
 
         }
-        else if(p.intValue == 0 || p.intValue == 3 || p.intValue == 6)
+       */
+        if (p.intValue == 0)
         {
-            EditorGUI.PrefixLabel(nameRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Option Field"));
-            nameRect.y += 16;
-            nameRect.height -= 16;
-            EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("field"), GUIContent.none);
-        }*/
+            GUIutil.doPrefixLabel(ref nameRect, "Display Object");
+            EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("displayObj"), GUIContent.none);
+        }
 
-        
 
-        
+
 
         /*EditorGUI.PrefixLabel(acRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Custom Sound"));
         acRect.y += 16;
@@ -190,7 +194,7 @@ public class populateDropDowns : MonoBehaviour
     {
         props = new List<DropDownProps>();
         props.Add(new DropDownProps());
-        props[0].name = "DropDown";
+        props[0].label= "";
         props[0].color = Color.grey;
         layoutGroup = gameObject;
         projectHandler.init();
@@ -205,7 +209,7 @@ public class populateDropDowns : MonoBehaviour
 
             GameObject obj = Instantiate(prefab, layoutGroup.transform);
             obj.transform.parent = layoutGroup.transform;
-            obj.name = b.name;
+            obj.name = b.label;
             Dropdown dropdown = obj.GetComponent<Dropdown>();
             if(!selected)
             {
@@ -214,7 +218,7 @@ public class populateDropDowns : MonoBehaviour
                 obj.AddComponent<UIselectOnEnable>();
             }
             
-            obj.transform.Find("Label").GetComponent<Text>().text = b.name;
+            obj.transform.Find("Label").GetComponent<Text>().text = b.label;
             //obj.transform.Find("ButtonCenter").GetComponent<Image>().color = b.color;
             switch(b.onSelect)
             {
@@ -223,7 +227,12 @@ public class populateDropDowns : MonoBehaviour
                     break;
 
                 case dropdownFunction.showDetails:
-                    //dropdown.onValueChanged.AddListener(() => MenuManager.ins.goBack());
+
+
+                    FillDropboxFromSource filldd = dropdown.GetComponent<FillDropboxFromSource>();
+
+                    filldd.displayObj = b.displayObj;
+                    dropdown.onValueChanged.AddListener(delegate { filldd.displayValFields(dropdown.value); });
                     break;
 
 
@@ -232,6 +241,7 @@ public class populateDropDowns : MonoBehaviour
             FillDropboxFromSource filldrop = obj.GetComponent<FillDropboxFromSource>();
             filldrop.data = b.data;
             filldrop.chosenField = b.field;
+            filldrop.labelText = b.label;
             filldrop.initData();
 
             /*if (b.AC != null)
