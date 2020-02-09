@@ -101,20 +101,7 @@ public class FillDropboxFromSource : MonoBehaviour
 
         }
         detailsPane.text = output;
-        /*if(display == null)
-        {
-            return;
-        }
 
-        display.displayCode = "";
-        foreach (KeyValuePair<string, string> entry in dat)
-        {
-
-            display.displayCode += entry.Key + "|" + entry.Value+"\n";
-            
-        }
-        display.displayCode = display.displayCode.Substring(0, display.displayCode.Length - 2);
-        display.parseFields();*/
     }
 
     public void displayValFields(int chosen)

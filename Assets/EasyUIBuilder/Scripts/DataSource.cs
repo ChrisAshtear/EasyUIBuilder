@@ -11,7 +11,7 @@ public class DataSource : ScriptableObject
     public string sourceName;
     public string addressOfData;
     protected bool dataReady = false;
-    public DataType type;
+    //public DataType type;
 
     public delegate void DataReadyHandler();
     public event DataReadyHandler onDataReady;

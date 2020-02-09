@@ -95,7 +95,7 @@ public class DropDownDrawer : PropertyDrawer
         var amountRect = getRect(100, position);
         var unitRect = getRect(100, position);
         var colorRect = getRect(100, position);
-        var nameRect = getRect(200, position);
+        var nameRect = getRect(100, position);
         var acRect = getRect(100, position);
 
         DataSource dataProp = (DataSource)property.FindPropertyRelative("data").objectReferenceValue;
@@ -115,7 +115,7 @@ public class DropDownDrawer : PropertyDrawer
         SerializedProperty userIndexProperty = property.FindPropertyRelative("fieldIdx");
         SerializedProperty fieldSelection = property.FindPropertyRelative("field");
 
-        GUIutil.doPrefixLabel(ref labelRect, "Field");
+        GUIutil.doPrefixLabel(ref labelRect, "Label");
         EditorGUI.PropertyField(labelRect, property.FindPropertyRelative("label"), GUIContent.none);
 
         EditorGUI.BeginChangeCheck();
@@ -130,36 +130,12 @@ public class DropDownDrawer : PropertyDrawer
         //when changing fields, field is first set to null.
         //keep a list of choices, when field is null, reset choices. if list is null, get choices.
         SerializedProperty p = property.FindPropertyRelative("onSelect");
-        // Draw fields - passs GUIContent.none to each so they are drawn without labels
-        //
-        /*if(p.intValue == 4)//custom prop
-        {
-            var eventRect = new Rect(position.x, position.y+yHeight, position.width, position.height-yHeight);
-            position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev"));
-            
 
-            var labelRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
-            EditorGUI.PrefixLabel(labelRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("OnPress : "));
-
-            eventRect.y += 16;
-            EditorGUI.PropertyField(eventRect, property.FindPropertyRelative("ev"), GUIContent.none);
-
-        }
-       */
         if (p.intValue == 0)
         {
             GUIutil.doPrefixLabel(ref nameRect, "Display Object");
             EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("displayObj"), GUIContent.none);
         }
-
-
-
-
-        /*EditorGUI.PrefixLabel(acRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Custom Sound"));
-        acRect.y += 16;
-        acRect.height -= 16; 
-        EditorGUI.PropertyField(acRect, property.FindPropertyRelative("AC"), GUIContent.none);
-        */
 
         GUIutil.doPrefixLabel(ref amountRect, "Data Source");
         EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("data"), GUIContent.none);
@@ -244,12 +220,6 @@ public class populateDropDowns : MonoBehaviour
             filldrop.labelText = b.label;
             filldrop.initData();
 
-            /*if (b.AC != null)
-            {
-                obj.GetComponent<AudioSource>().clip = b.AC;
-                button.onClick.AddListener(() => obj.GetComponent<AudioSource>().Play());
-
-            }*/
 
         }
     }
