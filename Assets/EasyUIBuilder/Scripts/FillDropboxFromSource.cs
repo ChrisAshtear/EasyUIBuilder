@@ -19,24 +19,34 @@ public class FillDropboxFromSource : MonoBehaviour
     public bool showLabel = true;
 
     Text label;
+
+
+
+    displayObjDetails display;
     // Start is called before the first frame update
 
+    //SHOW # items. adjust how big viewport is.
+    //Font to use. Maybe not for this particular script but in the prefab.
 
     public void populateButtons()
     {
 
         dropdown = GetComponent<Dropdown>();
         dropdown.ClearOptions();
-
-        List<string> options = data.getFieldFromAllItems(chosenField);
+        
         //need to pair id to value when selecting.
+        Dictionary<string,string> opts= data.getFieldFromAllItemsKeyed(chosenField,true,true);
+        //options.Add("");//add extra at bottom because dropdown hides it. 
 
-        options.Add("");//add extra at bottom because dropdown hides it. 
-
-        dropdown.AddOptions(options);
+        dropdown.AddOptions(opts.Keys.ToList());
     }
 
     private void Start()
+    {
+        initData();
+    }
+
+    public void initData()
     {
         label = gameObject.transform.Find("Label").GetComponent<Text>();
         label.enabled = showLabel;
@@ -50,6 +60,8 @@ public class FillDropboxFromSource : MonoBehaviour
         {
             populateButtons();
         }
+
+        display = GetComponent<displayObjDetails>();
     }
 
     private void OnLevelWasLoaded(int level)
@@ -59,6 +71,43 @@ public class FillDropboxFromSource : MonoBehaviour
         {
             populateButtons();
         }
+    }
+    
+
+
+    public void selectedVal(int chosen)
+    {
+        //should store all keys instead of doing a search like this
+        Dictionary<string, string> opts = data.getFieldFromAllItemsKeyed(chosenField);
+        string chosenVal = dropdown.options[chosen].text;
+        string key = opts[chosenVal];
+        Debug.Log("Chose " + chosenVal + ": " + key);
+
+        Dictionary<string, string> dat = data.getFieldsFromItemID(key);
+
+        string output = "";
+        foreach (KeyValuePair<string, string> entry in dat)
+        {
+
+            output += entry.Key + " : " + entry.Value + "\n";
+
+
+        }
+        detailsPane.text = output;
+        /*if(display == null)
+        {
+            return;
+        }
+
+        display.displayCode = "";
+        foreach (KeyValuePair<string, string> entry in dat)
+        {
+
+            display.displayCode += entry.Key + "|" + entry.Value+"\n";
+            
+        }
+        display.displayCode = display.displayCode.Substring(0, display.displayCode.Length - 2);
+        display.parseFields();*/
     }
 
     // Update is called once per frame

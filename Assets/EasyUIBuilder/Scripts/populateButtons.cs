@@ -111,18 +111,6 @@ public class ButtonDrawer : PropertyDrawer
         Selection.activeObject = go;
     }
     
-    static void matchObjSizeWithParent(GameObject child, GameObject parent)
-    {
-        RectTransform rectTransform = child.GetComponent<RectTransform>();
-
-        rectTransform.position = parent.GetComponent<RectTransform>().position;
-        rectTransform.anchorMin = new Vector2(0, 0);
-
-        rectTransform.anchorMax = new Vector2(1, 1);
-
-        rectTransform.pivot = new Vector2(0.5f, 0.5f);
-    }
-    
     [MenuItem("GameObject/EasyUIBuilder/UI Root", false, 10)]
     static void CreateUI(MenuCommand menuCommand)
     {
@@ -156,7 +144,7 @@ public class ButtonDrawer : PropertyDrawer
         GameObject m = new GameObject("MenuPanel");
         GameObjectUtility.SetParentAndAlign(m, menuCommand.context as GameObject);
         m.AddComponent<Image>();
-        matchObjSizeWithParent(m, menuCommand.context as GameObject);
+        GUIutil.matchObjSizeWithParent(m, menuCommand.context as GameObject);
 
         Animator anim = m.AddComponent<Animator>();
         doAnimAndSleep doanim = m.AddComponent<doAnimAndSleep>();

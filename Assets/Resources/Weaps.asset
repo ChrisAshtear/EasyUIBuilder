@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Ships
+  m_Name: Weaps
   m_EditorClassIdentifier: Assembly-CSharp::XMLDataSource
-  sourceName: ships.xml
+  sourceName: weapons.xml
   addressOfData: 
   type: 0
   primaryKey: UUID
-  elementToLoad: Ship
+  elementToLoad: Weapon

@@ -29,7 +29,8 @@ public class MenuManager : MonoBehaviour
 
     public static bool gameRunning = false;
 
-    
+    public displayObjDetails selectedDetails;
+    public GameObject detailsCard;
 
     public GameObject returnCurrentPanel()
     {
