@@ -153,6 +153,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: f6fd5260235b0104b8f5687274e13f30, type: 2}
   chosenField: Name
   showLabel: 1
+  labelText: 
+  comparisonVal: 
+  displayObj: {fileID: 0}
+  optionKeys: []
 --- !u!1 &7783437502724900975
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,7 +221,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 951fcc6c6967bc64e9f3c5afd371ddbf, type: 3}
     m_FontSize: 89
     m_FontStyle: 0
     m_BestFit: 0
@@ -546,7 +550,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 951fcc6c6967bc64e9f3c5afd371ddbf, type: 3}
     m_FontSize: 63
     m_FontStyle: 0
     m_BestFit: 0
@@ -782,7 +786,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 951fcc6c6967bc64e9f3c5afd371ddbf, type: 3}
     m_FontSize: 47
     m_FontStyle: 0
     m_BestFit: 0
