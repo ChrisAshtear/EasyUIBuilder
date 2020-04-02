@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     Dictionary<string, string> uiVals;
 
     public static bool draggingObject = false;
+    public static GameObject draggedObject;
 
     void Awake()
     {

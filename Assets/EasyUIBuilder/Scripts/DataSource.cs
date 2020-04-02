@@ -20,6 +20,8 @@ public class DataSource : ScriptableObject
     protected Dictionary<string,Dictionary<string, string>> data; //(primaryKey,(obj[fieldname/fieldval])
 
     public string primaryKey = "";
+    [TextArea(3, 10)]
+    public string displayCode = ""; // used for displaying an item with displayObj
     public DataSource()
     {
         //condition = maxCond;
@@ -69,7 +71,10 @@ public class DataSource : ScriptableObject
         return new Dictionary<string, string> ();
     }
 
-
+    public virtual Dictionary<string, string> getFieldFromAllItemsKeyedR(string field, bool uniqueOnly = false, bool sort = false)
+    {
+        return new Dictionary<string, string>();
+    }
     public virtual string getFieldFromItemID(string id, string field)
     {
         return "";

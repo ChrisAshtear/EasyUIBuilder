@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94989ce3a7058634bb6a31def27deda4, type: 3}
   m_Name: ProjectData
   m_EditorClassIdentifier: 
-  gameName: EasyUI
+  gameName: StarFire
   credits: '
 
     Code: Ryan Wine'
   defaultButton: {fileID: 6226516285635520970, guid: 08d89d9eea017014db7fc794bd4ac28f,
     type: 3}
-  menuConfirm: {fileID: 8300000, guid: 9e345b87469c72542afb6f4a691e5a1a, type: 3}
-  menuCancel: {fileID: 8300000, guid: eaf00fdd55c73ef4d93cd8183b70ff4a, type: 3}
+  menuConfirm: {fileID: 8300000, guid: dd6049cf86ec58b41a635808bff62b82, type: 3}
+  menuCancel: {fileID: 8300000, guid: 54b8951242d5bcf409565adb22fc1bc1, type: 3}
+  menuMusic: {fileID: 0}
+  gameMusic: {fileID: 0}

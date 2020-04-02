@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<PowerCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Powers>
+    <Power UUID="mfusion.reactor" Size="S" MinTotalPower="4" MaxTotalPower="10" MinimumPrice="2000" BasePrice="3200" iconIdx="30" Name="Micro-Fusion Reactor" Description="Standard Pocket-Sized Reactor on a typical Fighter." Hull="1"/>
+    <Power UUID="fusion.reactor" Size="M" MinTotalPower="25" MaxTotalPower="60" MinimumPrice="5000" BasePrice="7500" iconIdx="26" Name="Fusion Reactor" Description="Large, full-sized Fusion Reactor for larger Fighters and Bombers." Hull="1" />
+    <Power UUID="amatter.reactor" Size="S" MinTotalPower="11" MaxTotalPower="20" MinimumPrice="3000" BasePrice="4000" iconIdx="6" Name="Anti-Matter Reactor" Description="Small Anti-Matter Reactor Core to power more advanced systems." Hull="1" />
+    <Power UUID="nspace.reactor" Size="S" MinTotalPower="21" MaxTotalPower="30" MinimumPrice="6500" BasePrice="9000" iconIdx="7" Name="Null-Space Reactor" Description="The Ultimate in Small Scale power generation." Hull="1"  />
+    <Power UUID="none.reactor" Size="S" MinTotalPower="0" MaxTotalPower="0" MinimumPrice="6500" BasePrice="9000" iconIdx="3" Name="None" Description="A Complete Void, Really" Hull="1"  />
+  </Powers>
+</PowerCollection>

@@ -28,6 +28,7 @@ public class MenuManager : MonoBehaviour
     private AudioSource music;
 
     public static bool gameRunning = false;
+    public static bool dataLoaded { get; } = false;
 
     public displayObjDetails selectedDetails;
     public GameObject detailsCard;

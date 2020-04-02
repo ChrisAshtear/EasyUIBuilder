@@ -154,6 +154,47 @@ public class XMLDataSource : DataSource
         return new Dictionary<string, string>();
     }
 
+    public override Dictionary<string, string> getFieldFromAllItemsKeyedR(string field, bool uniqueOnly = false, bool sort = false)
+    {
+        if (dataReady)
+        {
+            Dictionary<string, string> allVals = new Dictionary<string, string>();
+
+
+
+            foreach (Dictionary<string, string> dict in data.Values)
+            {
+                string val = "none";
+                string key = "none";
+                dict.TryGetValue(field, out val);
+                dict.TryGetValue(primaryKey, out key);
+
+                if (uniqueOnly && allVals.ContainsKey(val))
+                {
+                    continue;
+                }
+                allVals.Add(key, val);
+                // do something with entry.Value or entry.Key
+            }
+
+            if (sort)
+            {
+                //this seems the easiest way to sort.
+                var items = from pair in allVals
+                            orderby pair.Key ascending
+                            select pair;
+
+                return items.ToDictionary(t => t.Key, t => t.Value);
+            }
+            else
+            {
+                return allVals;
+            }
+
+        }
+        return new Dictionary<string, string>();
+    }
+
 
     public override string getFieldFromItemID(string id, string field)
     {

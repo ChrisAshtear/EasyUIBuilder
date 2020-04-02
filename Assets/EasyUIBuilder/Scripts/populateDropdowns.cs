@@ -7,7 +7,19 @@ using Unity;
 using UnityEngine.Events;
 using UnityEditor;
 
-public enum dropdownFunction { showDetails, Form };
+public enum dropdownFunction { showDetails, Form,CustomPlusDetails };
+
+
+[System.Serializable]
+public class OnSelectEvent : UnityEvent<selectData>
+{
+}
+
+public class selectData
+{
+    public Dropdown drop;//reference to dropdown
+    public int selected;//index of selected item
+}
 
 // Custom serializable class
 [Serializable]
@@ -17,6 +29,8 @@ public class DropDownProps
     public dropdownFunction onSelect = dropdownFunction.Form;
     public Color32 color = Color.grey;
     public UnityEvent ev;
+    public OnSelectEvent ev1;
+    
     public DataSource data;
     public string field;
     //public string option;
@@ -24,10 +38,12 @@ public class DropDownProps
     public int fieldIdx;
 }
 
+
 #if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(DropDownProps))]
 public class DropDownDrawer : PropertyDrawer
 {
+    
     private float xOffset = 0;
     private float yHeight = 32;
     private float expandedHeight = 50;//extra space for event control +/- buttons
@@ -63,15 +79,16 @@ public class DropDownDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        /*SerializedProperty p = property.FindPropertyRelative("onPress");
-        if (p.intValue == 4)//custom prop
+        SerializedProperty p = property.FindPropertyRelative("onSelect");
+        
+        if (p.intValue == 2)//custom prop
         {
-            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev")) + expandedHeight ;
+            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev1")) + expandedHeight ;
         }
         else
-        {*/
+        {
             return yHeight;
-        //}
+        }
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -127,11 +144,28 @@ public class DropDownDrawer : PropertyDrawer
             fieldSelection.stringValue = allFields[_choiceIndex];
         }
 
+
+
         //when changing fields, field is first set to null.
         //keep a list of choices, when field is null, reset choices. if list is null, get choices.
         SerializedProperty p = property.FindPropertyRelative("onSelect");
 
-        if (p.intValue == 0)
+        if (p.intValue == 2)//custom prop
+        {
+            var eventRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
+            position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev1"));
+
+
+            var lblRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
+            EditorGUI.PrefixLabel(lblRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("OnPress : "));
+
+            eventRect.y += 16;
+            EditorGUI.PropertyField(eventRect, property.FindPropertyRelative("ev1"), GUIContent.none);
+
+        }
+
+
+        if (p.intValue == 0 || p.intValue == 2)
         {
             GUIutil.doPrefixLabel(ref nameRect, "Display Object");
             EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("displayObj"), GUIContent.none);
@@ -165,6 +199,7 @@ public class populateDropDowns : MonoBehaviour
     public List<DropDownProps> props;
     public GameObject layoutGroup; // where to place generated buttons
     public GameObject prefab;//button prefab
+    public bool populateOnStart = true;
 
     void Reset()
     {
@@ -179,24 +214,35 @@ public class populateDropDowns : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(populateOnStart)
+        {
+            Populate();
+        }
+        
+    }
+
+    public void Populate()
+    {
         bool selected = false;
-        foreach(DropDownProps b in props)
+        foreach (DropDownProps b in props)
         {
 
             GameObject obj = Instantiate(prefab, layoutGroup.transform);
             obj.transform.parent = layoutGroup.transform;
             obj.name = b.label;
             Dropdown dropdown = obj.GetComponent<Dropdown>();
-            if(!selected)
+            if (!selected)
             {
                 dropdown.Select();
                 selected = true;
                 obj.AddComponent<UIselectOnEnable>();
             }
-            
+
             obj.transform.Find("Label").GetComponent<Text>().text = b.label;
             //obj.transform.Find("ButtonCenter").GetComponent<Image>().color = b.color;
-            switch(b.onSelect)
+            FillDropboxFromSource filldd;
+            filldd = dropdown.GetComponent<FillDropboxFromSource>();
+            switch (b.onSelect)
             {
                 case dropdownFunction.Form:
                     //dropdown.onValueChanged.AddListener(() => MenuManager.ins.changeMenu(b.argument,b.AC));
@@ -204,13 +250,25 @@ public class populateDropDowns : MonoBehaviour
 
                 case dropdownFunction.showDetails:
 
-
-                    FillDropboxFromSource filldd = dropdown.GetComponent<FillDropboxFromSource>();
-
                     filldd.displayObj = b.displayObj;
                     dropdown.onValueChanged.AddListener(delegate { filldd.displayValFields(dropdown.value); });
                     break;
 
+                case dropdownFunction.CustomPlusDetails:
+
+                    filldd.displayObj = b.displayObj;
+                    dropdown.onValueChanged.AddListener(delegate { filldd.displayValFields(dropdown.value); });
+                    selectData s = new selectData();
+                    s.drop = dropdown;
+                    s.selected = dropdown.value;
+
+                    dropdown.onValueChanged.AddListener(delegate { b.ev1.Invoke(s); });
+
+                    /*if (b.AC == null)
+                    {
+                        button.onClick.AddListener(() => MenuManager.ins.playSound(projectHandler.pData.menuConfirm));
+                    }*/
+                    break;
 
             }
 
@@ -223,6 +281,13 @@ public class populateDropDowns : MonoBehaviour
 
         }
     }
+
+    public void Clear()
+    {
+        GUIutil.clearChildren(transform);
+        props.Clear();
+    }
+
 
     // Update is called once per frame
     void Update()

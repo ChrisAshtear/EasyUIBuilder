@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ThrusterCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Thrusters>
+    <Thruster UUID="thruster" Name="Thruster" Description="none" Hull="1" Classification="0" Class="0" Category="0" Capacity="0" ThrusterRegenRate="0" EnergyPerShot="165" />
+    <Thruster UUID="d.thruster" Name="Deluxe Thruster" Description="none" Hull="1" Classification="0" Class="0" Category="0" Capacity="0" ThrusterRegenRate="0" EnergyPerShot="150" />
+    <Thruster UUID="o.thruster" Name="Order Thruster" Description="none" Hull="1" Classification="0" Class="0" Category="0" Capacity="0" ThrusterRegenRate="0" EnergyPerShot="150" />
+    <Thruster UUID="h.thruster" Name="Heavy Thruster" Description="none" Hull="1" Classification="0" Class="0" Category="0" Capacity="0" ThrusterRegenRate="0" EnergyPerShot="133" />
+    <Thruster UUID="a.thruster" Name="Advanced Thruster" Description="none" Hull="1" Classification="0" Class="0" Category="0" Capacity="0" ThrusterRegenRate="0" EnergyPerShot="125" />
+  </Thrusters>
+</ThrusterCollection>

@@ -25,4 +25,38 @@ public static class GUIutil
         position.height -= verticalSpacing;
         return position;
     }
+
+    public static void dropdownFromData(ref Rect position, DataSource source, string field)
+    {
+        /*
+
+        EditorGUI.BeginChangeCheck();
+        GUIutil.doPrefixLabel(ref unitRect, "Field");
+        _choiceIndex = EditorGUI.Popup(unitRect, userIndexProperty.intValue, allFields.ToArray());
+        if (EditorGUI.EndChangeCheck())
+        {
+            userIndexProperty.intValue = _choiceIndex;
+            fieldSelection.stringValue = allFields[_choiceIndex];
+        }*/
+    }
+
+    public static void clearChildren(Transform t)
+    {
+        List<GameObject> objs = new List<GameObject>();
+        foreach (Transform child in t)
+        {
+            objs.Add(child.gameObject);
+        }
+        foreach (GameObject c in objs)
+        {
+            if (Application.isEditor)
+            {
+                Object.DestroyImmediate(c);
+            }
+            else
+            {
+                Object.Destroy(c);
+            }
+        }
+    }
 }
