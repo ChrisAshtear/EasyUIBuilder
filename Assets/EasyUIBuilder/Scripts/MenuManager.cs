@@ -32,6 +32,7 @@ public class MenuManager : MonoBehaviour
 
     public displayObjDetails selectedDetails;
     public GameObject detailsCard;
+    public GameObject selectedItem;
 
     public GameObject returnCurrentPanel()
     {

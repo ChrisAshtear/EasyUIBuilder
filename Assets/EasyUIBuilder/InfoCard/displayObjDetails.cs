@@ -11,6 +11,10 @@ public class displayObjDetails : MonoBehaviour
 
     [TextArea(3, 10)]
     public string displayCode;
+    //display code contained in DATA file
+    //something should be done for an instance of a data type:
+    //ie new stats would be in data file
+    //changing item stats like condition would also have to be displayed
 
     public string comparisonVal;
 
@@ -64,19 +68,21 @@ public class displayObjDetails : MonoBehaviour
     public virtual void OnMouseDown()
     {
         
-        /*MenuManager.ins.selectedDetails = this;
+        MenuManager.ins.selectedDetails = this;
         uiObject.transform.parent.gameObject.SetActive(true);
         //uiObject.Name = ingName;
         uiObject.resetVals();
-        selectedSpr.SetActive(true);
+        //selectedSpr.SetActive(true);
         parseFields();
-        */
 
     }
 
     public void parseFields()
     {
-        
+        if(displayCode.Length <=1)
+        {
+            return;
+        }
         string[] lines = displayCode.Split('\n');
         comparisons.Clear();
         string currentComparison = "";

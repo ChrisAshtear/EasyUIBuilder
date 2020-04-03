@@ -7,15 +7,13 @@ using Unity;
 using UnityEngine.Events;
 using UnityEditor;
 
-public enum dropdownFunction { showDetails, Form,CustomPlusDetails };
+public enum listFunction { showDetails, Form,CustomPlusDetails };
 
 
 [System.Serializable]
-public class OnSelectEvent : UnityEvent<selectData>
-{
-}
 
-public class selectData
+
+public class selectListItem
 {
     public Dropdown drop;//reference to dropdown
     public int selected;//index of selected item
@@ -23,10 +21,10 @@ public class selectData
 
 // Custom serializable class
 [Serializable]
-public class DropDownProps
+public class ListProps
 {
     public string label = "";
-    public dropdownFunction onSelect = dropdownFunction.Form;
+    public listFunction onSelect = listFunction.Form;
     public Color32 color = Color.grey;
     public UnityEvent ev;
     public OnSelectEvent ev1;
@@ -40,8 +38,8 @@ public class DropDownProps
 
 
 #if UNITY_EDITOR
-[CustomPropertyDrawer(typeof(DropDownProps))]
-public class DropDownDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(ListProps))]
+public class ListDrawer : PropertyDrawer
 {
     
     private float xOffset = 0;
@@ -58,6 +56,24 @@ public class DropDownDrawer : PropertyDrawer
     // The Preferences
     public static bool boolPreference = false;
 
+    // Add preferences section named "My Preferences" to the Preferences window
+    [PreferenceItem("My Preferences")]
+    public static void PreferencesGUI()
+    {
+        // Load the preferences
+        if (!prefsLoaded)
+        {
+            boolPreference = EditorPrefs.GetBool("BoolPreferenceKey", false);
+            prefsLoaded = true;
+        }
+
+        // Preferences GUI
+        boolPreference = EditorGUILayout.Toggle("Bool Preference", boolPreference);
+
+        // Save the preferences
+        if (GUI.changed)
+            EditorPrefs.SetBool("BoolPreferenceKey", boolPreference);
+    }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
@@ -175,20 +191,20 @@ public class DropDownDrawer : PropertyDrawer
 }
 #endif
 
-public class populateDropDowns : MonoBehaviour
+public class populateList : MonoBehaviour
 {
 
-    public List<DropDownProps> props;
+    public ListProps props;
     public GameObject layoutGroup; // where to place generated buttons
     public GameObject prefab;//button prefab
     public bool populateOnStart = true;
 
     void Reset()
     {
-        props = new List<DropDownProps>();
-        props.Add(new DropDownProps());
-        props[0].label= "";
-        props[0].color = Color.grey;
+        //props = new List<DropDownProps>();
+        //props.Add(new DropDownProps());
+        //props[0].label= "";
+        //props[0].color = Color.grey;
         layoutGroup = gameObject;
         projectHandler.init();
         prefab = projectHandler.pData.defaultButton;
@@ -206,68 +222,37 @@ public class populateDropDowns : MonoBehaviour
     public void Populate()
     {
         bool selected = false;
-        foreach (DropDownProps b in props)
-        {
 
+        List<string> keys = props.data.getFieldFromAllItems(props.data.primaryKey);
+
+        foreach(string key in keys)
+        {
             GameObject obj = Instantiate(prefab, layoutGroup.transform);
             obj.transform.parent = layoutGroup.transform;
-            obj.name = b.label;
-            Dropdown dropdown = obj.GetComponent<Dropdown>();
-            if (!selected)
+            obj.name = key;
+            FillFromSource fill = obj.GetComponent<FillFromSource>();
+            fill.data = props.data;
+            fill.index = key;
+            foreach( DataFieldMap m in fill.FieldMapping)
             {
-                dropdown.Select();
-                selected = true;
-                obj.AddComponent<UIselectOnEnable>();
+                m.data = props.data;
             }
-
-            obj.transform.Find("Label").GetComponent<Text>().text = b.label;
-            //obj.transform.Find("ButtonCenter").GetComponent<Image>().color = b.color;
-            FillDropboxFromSource filldd;
-            filldd = dropdown.GetComponent<FillDropboxFromSource>();
-            switch (b.onSelect)
-            {
-                case dropdownFunction.Form:
-                    //dropdown.onValueChanged.AddListener(() => MenuManager.ins.changeMenu(b.argument,b.AC));
-                    break;
-
-                case dropdownFunction.showDetails:
-
-                    filldd.displayObj = b.displayObj;
-                    dropdown.onValueChanged.AddListener(delegate { filldd.displayValFields(dropdown.value); });
-                    break;
-
-                case dropdownFunction.CustomPlusDetails:
-
-                    filldd.displayObj = b.displayObj;
-                    dropdown.onValueChanged.AddListener(delegate { filldd.displayValFields(dropdown.value); });
-                    selectData s = new selectData();
-                    s.drop = dropdown;
-                    s.selected = dropdown.value;
-
-                    dropdown.onValueChanged.AddListener(delegate { b.ev1.Invoke(s); });
-
-                    /*if (b.AC == null)
-                    {
-                        button.onClick.AddListener(() => MenuManager.ins.playSound(projectHandler.pData.menuConfirm));
-                    }*/
-                    break;
-
-            }
-
-            FillDropboxFromSource filldrop = obj.GetComponent<FillDropboxFromSource>();
-            filldrop.data = b.data;
-            filldrop.chosenField = b.field;
-            filldrop.labelText = b.label;
-            filldrop.initData();
-
-
+            fill.fill();
         }
+
+    }
+
+    public void setData(DataSource d)
+    {
+        props.data = d;
+        Clear();
+        Invoke("Populate", 0.2f);
     }
 
     public void Clear()
     {
-        GUIutil.clearChildren(transform);
-        props.Clear();
+        GUIutil.clearChildren(layoutGroup.transform);
+        //props.Clear();
     }
 
 

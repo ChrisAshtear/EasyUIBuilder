@@ -1,17 +1,18 @@
 fileFormatVersion: 2
-guid: 951fcc6c6967bc64e9f3c5afd371ddbf
+guid: 270dfe97a20536643bf6aa35dc008d7e
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
-  fontSize: 16
-  forceTextureCase: -2
+  fontSize: 75
+  forceTextureCase: -1
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
   fontName: 'Pompiere '
   fontNames:
   - 'Pompiere '
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 951fcc6c6967bc64e9f3c5afd371ddbf, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

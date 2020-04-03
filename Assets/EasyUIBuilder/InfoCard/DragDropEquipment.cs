@@ -14,15 +14,18 @@ public class DragDropEquipment : MonoBehaviour
 
     public void onPointerEnter()
     {
-        if(GameManager.draggingObject)
-        {
+        //if(GameManager.draggingObject)
+        //{
             highlight.enabled = true;
-        }
+        //}
     }
 
     public void onPointerExit()
     {
-        highlight.enabled = false;
+        if(MenuManager.ins.selectedItem != gameObject)
+        {
+            highlight.enabled = false;
+        }
     }
 
     public void DropToCargo()
@@ -70,6 +73,12 @@ public class DragDropEquipment : MonoBehaviour
                 
             }*/
         }
+    }
+
+    public void selectItem()
+    {
+        MenuManager.ins.selectedItem = gameObject;
+        highlight.enabled = false;
     }
 
     // Update is called once per frame

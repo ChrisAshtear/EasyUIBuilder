@@ -18,8 +18,15 @@ public class GenericDataHandler : MonoBehaviour
     public void setData(object dataSource)
     {
         this.dataSource = dataSource;
-
-        fields = dataSource.GetType().GetFields().ToDictionary(prop => prop.Name, prop => prop.GetValue(dataSource));
+        if(dataSource is IDictionary)
+        {
+            Dictionary<string, string> dict = (Dictionary<string, string>)dataSource;
+            fields = dict.ToDictionary(k => k.Key, k => (object)k.Value);
+        }
+        else
+        {
+            fields = dataSource.GetType().GetFields().ToDictionary(prop => prop.Name, prop => prop.GetValue(dataSource));
+        }
     }
 
     public string getData(string field)
