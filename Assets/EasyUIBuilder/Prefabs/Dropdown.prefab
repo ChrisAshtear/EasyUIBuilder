@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7783437502697339033}
   - component: {fileID: 7783437502697339034}
   - component: {fileID: 7783437502697339035}
+  - component: {fileID: 2257426787481678229}
+  - component: {fileID: 5757565965918081489}
   m_Layer: 5
   m_Name: Dropdown
   m_TagString: Untagged
@@ -150,13 +152,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detailsPane: {fileID: 0}
-  data: {fileID: 11400000, guid: f6fd5260235b0104b8f5687274e13f30, type: 2}
+  data: {fileID: 0}
   chosenField: Name
   showLabel: 1
   labelText: 
   comparisonVal: 
   displayObj: {fileID: 0}
   optionKeys: []
+--- !u!114 &2257426787481678229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7783437502697339037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f40f47e8b05f5234c9fde49694471316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5757565965918081489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7783437502697339037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e97f98f7ac065b478e2960ccf00a713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiObject: {fileID: 0}
+  displayCode: 
+  comparisonVal: 
+  alwaysVisible: 0
+  followCursor: 0
+  updateTick: 0.5
+  selectedSpr: {fileID: 0}
 --- !u!1 &7783437502724900975
 GameObject:
   m_ObjectHideFlags: 0

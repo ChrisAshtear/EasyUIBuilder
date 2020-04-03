@@ -38,7 +38,6 @@ public class MenuManager : MonoBehaviour
     {
         return panels.returnPanel(currentPanel);
     }
-
 	public void quitGame()
 	{
         Invoke("exit", 1);
