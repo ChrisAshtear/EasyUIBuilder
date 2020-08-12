@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 public enum DataType {  XML, SQL,JSON,Choice, Web}; // we need custom handlers for all these.
 
 public enum fieldType { str, integer, flt };
@@ -83,6 +84,24 @@ public class DataSource : ScriptableObject
     public virtual string setFieldFromItemID(string id, string field,string value)
     {
         return "";
+    }
+
+    public virtual string getRandomFieldVal(string fieldName)
+    {
+        if(dataReady)
+        {
+            List<Dictionary<string, string>> vals = data.Values.ToList();
+            Dictionary<string, string> entry = vals[Random.Range(0, vals.Count)];
+
+            string val;
+            entry.TryGetValue(fieldName, out val);
+
+            return val ?? "none";
+        }
+        else
+        {
+            return "not ready";
+        }
     }
 
     public virtual Dictionary<string,string> getFieldsFromItemID(string id)
