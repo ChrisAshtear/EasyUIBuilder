@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<ShieldCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Shields>
-    <Shield UUID="sentry.lf" PowerUsageIdle="4" PowerUsageCharging="6" MinimumPrice="500" BasePrice="1000" iconIdx="19" Name="Sentry, L.F." Description="Standard Issue shielding. Takes a while to recharge." Hull="1" Classification="1" Class="1" Category="0" Capacity="230" ShieldRegenRate="5" />
-    <Shield UUID="sc.lf" PowerUsageIdle="4" PowerUsageCharging="6" MinimumPrice="3000" BasePrice="4000" iconIdx="29" Name="SuperCharge" Description="Advanced Technology goes into making this shield generator recharge 3x as fast as the Sentry." Hull="1" Classification="1" Class="1" Category="0" Capacity="200" ShieldRegenRate="15" />
-    <Shield UUID="sentry.hf" PowerUsageIdle="7" PowerUsageCharging="10" MinimumPrice="3500" BasePrice="6000" iconIdx="9" Name="Sentry, H.F." Description="The Ultimate in protective gear." Hull="1" Classification="1" Class="1" Category="1" Capacity="654" ShieldRegenRate="14" />
-    <Shield UUID="noshield" Name="None" Description="none" Hull="1" Classification="1" Class="1" Category="1" Capacity="0" ShieldRegenRate="0" />
-  </Shields>
-</ShieldCollection>

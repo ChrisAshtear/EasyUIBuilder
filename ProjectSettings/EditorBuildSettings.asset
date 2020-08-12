@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/EasyUIBuilder/Main.unity
+    path: Assets/Packages/EasyUIBuilder/Main.unity
     guid: 2edcd7c687224ff44a50904a85cfbb24
   - enabled: 1
-    path: Assets/EasyUIBuilder/Game.unity
+    path: Assets/Packages/EasyUIBuilder/Game.unity
     guid: 3feaf677fca4f3342b5787c5af5ab536
   m_configObjects: {}
