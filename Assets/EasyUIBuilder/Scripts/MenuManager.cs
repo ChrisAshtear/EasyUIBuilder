@@ -64,20 +64,50 @@ public class MenuManager : MonoBehaviour
             MenuManager.ins = this;
         }
 
+        string[] hideInMenu = { "GamePanel", "GameOver" };
+        string[] hideInGame = { "GameOver" };
+        string[] showInGame = { "GamePanel" };
+        string[] showInMenu = { "MenuBG"};
+
+        if (projectHandler.pData.showInMenu != "")
+        {
+            showInMenu = projectHandler.pData.showInMenu.Split(',');
+        }
+        if (projectHandler.pData.hideInMenu != "")
+        {
+            hideInMenu = projectHandler.pData.hideInMenu.Split(',');
+        }
+        if (projectHandler.pData.showInGame != "")
+        {
+            showInGame = projectHandler.pData.showInGame.Split(',');
+        }
+        if (projectHandler.pData.hideInGame != "")
+        {
+            hideInGame = projectHandler.pData.hideInGame.Split(',');
+        }
+
         switch (level)
         {
             case 0:
-                panels.hidePanel("GamePanel");
-                panels.hidePanel("GameOver");
-                //panels.showPanel("MenuBG");
-                //panels.showPanel("MenuPanel");
-                //panels.showPanel("BG");
+                foreach(string s in hideInMenu)
+                {
+                    panels.hidePanel(s);
+                }
+                foreach (string s in showInMenu)
+                {
+                    panels.showPanel(s);
+                }
                 break;
 
             case 1:
-                panels.showPanel("GamePanel");
-                panels.hidePanel("GameOver");
-                //panels.hidePanel("MenuBG");
+                foreach (string s in hideInGame)
+                {
+                    panels.hidePanel(s);
+                }
+                foreach (string s in showInGame)
+                {
+                    panels.showPanel(s);
+                }
                 break;
         }
 

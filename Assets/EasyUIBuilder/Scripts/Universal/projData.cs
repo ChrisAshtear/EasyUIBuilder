@@ -30,4 +30,9 @@ public class projData : ScriptableObject
     public AudioClip menuMusic;
     public AudioClip gameMusic;
 
+    [Header("Menus")]
+    public string showInMenu;
+    public string hideInMenu;
+    public string showInGame;
+    public string hideInGame;
 }
