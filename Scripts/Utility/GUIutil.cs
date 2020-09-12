@@ -110,12 +110,16 @@ public static class GUIutil
         t.Enabled = true;
     }
 
-    public static void clearChildren(Transform t)
+    public static void clearChildren(Transform t,string exception="none")
     {
         List<GameObject> objs = new List<GameObject>();
         foreach (Transform child in t)
         {
-            objs.Add(child.gameObject);
+            if(child.name != exception)
+            {
+                objs.Add(child.gameObject);
+            }
+            
         }
         foreach (GameObject c in objs)
         {

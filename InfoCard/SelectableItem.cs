@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class SelectableItem : MonoBehaviour
 {
     public Image highlight;
+    public SpriteRenderer highlightSpr;
     public UnityEvent e_pointerDown = new UnityEvent();
 
     public I_ItemMenu parentList;
@@ -15,16 +16,35 @@ public class SelectableItem : MonoBehaviour
         
     }
 
+    private void OnMouseEnter()
+    {
+        Debug.Log("WTF");
+        //onPointerEnter();
+    }
+
     public void onPointerEnter()
     {
-         highlight.enabled = true;
+        setHighlight(true);
+    }
+
+    public void setHighlight(bool enable)
+    {
+        if (highlight != null)
+        {
+            highlight.enabled = enable;
+        }
+        if (highlightSpr != null)
+        {
+
+            highlightSpr.enabled = enable;
+        }
     }
 
     public void onPointerExit()
     {
         if(getSelected() != gameObject)
         {
-            highlight.enabled = false;
+            setHighlight(false);
             displayObjDetails obj = gameObject.GetComponent<displayObjDetails>();
             if(obj!=null)
             {
@@ -73,7 +93,8 @@ public class SelectableItem : MonoBehaviour
         }
 
         setSelected();
-        highlight.enabled = true;
+        setHighlight(true);
+
 
         e_pointerDown.Invoke();
     }
