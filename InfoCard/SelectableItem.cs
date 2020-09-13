@@ -7,6 +7,8 @@ public class SelectableItem : MonoBehaviour
 {
     public Image highlight;
     public SpriteRenderer highlightSpr;
+    public SpriteRenderer activeHighlightSpr;
+    public Image activeHighlight;
     public UnityEvent e_pointerDown = new UnityEvent();
 
     public I_ItemMenu parentList;
@@ -37,6 +39,19 @@ public class SelectableItem : MonoBehaviour
         {
 
             highlightSpr.enabled = enable;
+        }
+    }
+
+    public void setActive(bool enable)
+    {
+        if (activeHighlight != null)
+        {
+            activeHighlight.enabled = enable;
+        }
+        if (activeHighlightSpr != null)
+        {
+
+            activeHighlightSpr.enabled = enable;
         }
     }
 

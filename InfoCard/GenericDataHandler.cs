@@ -57,8 +57,21 @@ public class GenericDataHandler : MonoBehaviour
 
     public string getData(string field, string index="")//index is for looking up from a data source.
     {
+        if (fields == null || fields.Count < 1)
+        {
+            return "";
+        }
         return getDataObj(field, index).ToString();
         
+    }
+
+    public int getDataAsInt(string field, string index="")
+    {
+        if(fields == null || fields.Count < 1)
+        {
+            return 0;
+        }
+        return (int)getDataObj(field, index);
     }
 
     public object getDataObj(string field, string index="")

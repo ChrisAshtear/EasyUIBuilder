@@ -90,17 +90,21 @@ public class displayObjDetails : MonoBehaviour
     public virtual void OnMouseDown()
     {
         CancelInvoke();
-        MenuManager.ins.selectedDetails = this;
-        uiObject.transform.parent.gameObject.SetActive(true);
-        //uiObject.Name = ingName;
-        uiObject.resetVals();
-        //selectedSpr.SetActive(true);
-        parseFields();
+        displayDetails();
         if(update)
         {
             Invoke("OnMouseDown", 1f);
         }
         
+    }
+
+    public void displayDetails()
+    {
+        uiObject.transform.parent.gameObject.SetActive(true);
+        //uiObject.Name = ingName;
+        uiObject.resetVals();
+        //selectedSpr.SetActive(true);
+        parseFields();
     }
 
     public void parseFields()
