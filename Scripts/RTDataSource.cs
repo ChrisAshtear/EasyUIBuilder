@@ -94,6 +94,10 @@ public class RTDataSource : DataSource
                     }
                 }
             }
+            if(!this.data.ContainsKey(selectedKey))
+            {
+                selectedKey = "NA";
+            }
             dataReady = true;
         }
        

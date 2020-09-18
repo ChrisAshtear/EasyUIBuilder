@@ -34,6 +34,8 @@ public class MenuManager : MonoBehaviour
     public GameObject detailsCard;
     public GameObject selectedItem;
 
+    public bool changeScene = true;
+
     public GameObject returnCurrentPanel()
     {
         return panels.returnPanel(currentPanel);
@@ -274,7 +276,15 @@ public class MenuManager : MonoBehaviour
 
     public void doStart()
     {
-        SceneManager.LoadScene(1,LoadSceneMode.Single);
+        if(changeScene)
+        {
+            SceneManager.LoadScene(1, LoadSceneMode.Single);
+        }
+        else
+        {
+            OnLevelWasLoaded(1);
+        }
+        
         changeMusic(projectHandler.pData.gameMusic);
         MenuManager.gameRunning = true;
         GameManager.ins.gameStart();
@@ -290,7 +300,15 @@ public class MenuManager : MonoBehaviour
 
     public void doStop()
     {
-        SceneManager.LoadScene(0);
+        if(changeScene)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            OnLevelWasLoaded(0);
+        }
+        
         changeMusic(projectHandler.pData.menuMusic);
         panels.showPanel("MenuPanel", true);
         currentPanel = "MenuPanel";

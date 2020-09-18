@@ -41,12 +41,16 @@ public class GenericDataHandler : MonoBehaviour
     }
     public void setData(object dataSource,string index="",DataSource source = null)
     {
+        /*if(dataSource == null && source == null)
+        {
+            return;
+        }*/
         this.dataSource = dataSource;
         if(this.source != null && this.index != null) // RT source has been set.
         {
             dataSource = this.source.getFieldObjsFromItemID(this.index);
         }
-        fields = GenericDataHandler.objectToDict(dataSource);
+        fields = new Dictionary<string,object>(GenericDataHandler.objectToDict(dataSource));
         if(source != null && index != "")
         {
             this.source = source;
@@ -57,21 +61,32 @@ public class GenericDataHandler : MonoBehaviour
 
     public string getData(string field, string index="")//index is for looking up from a data source.
     {
-        if (fields == null || fields.Count < 1)
+        object retData =null;
+        retData = getDataObj(field, index);
+
+        if(retData != null)
+        {
+            return retData.ToString();
+        }
+        else
         {
             return "";
         }
-        return getDataObj(field, index).ToString();
-        
     }
 
     public int getDataAsInt(string field, string index="")
     {
-        if(fields == null || fields.Count < 1)
+        object retData = null;
+        retData = getDataObj(field, index);
+
+        if (retData != null)
+        {
+            return (int)retData;
+        }
+        else
         {
             return 0;
         }
-        return (int)getDataObj(field, index);
     }
 
     public object getDataObj(string field, string index="")

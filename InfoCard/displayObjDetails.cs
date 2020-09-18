@@ -82,7 +82,11 @@ public class displayObjDetails : MonoBehaviour
 
     public void refreshData()
     {
-        data.setData(source.getSelected());
+        if(source.getSelected() != null)
+        {
+            data.setData(source.getSelected());
+        }
+       
         uiObject.resetVals();
         parseFields();
     }
@@ -105,6 +109,7 @@ public class displayObjDetails : MonoBehaviour
         uiObject.resetVals();
         //selectedSpr.SetActive(true);
         parseFields();
+       //refreshData();
     }
 
     public void parseFields()
