@@ -41,10 +41,10 @@ public class GenericDataHandler : MonoBehaviour
     }
     public void setData(object dataSource,string index="",DataSource source = null)
     {
-        /*if(dataSource == null && source == null)
+        if(dataSource == null && source == null)
         {
             return;
-        }*/
+        }
         this.dataSource = dataSource;
         if(this.source != null && this.index != null) // RT source has been set.
         {
@@ -96,7 +96,10 @@ public class GenericDataHandler : MonoBehaviour
 
         setData(dataSource); // need to refresh data
         //Make more efficient
-
+        if (fields == null)
+        {
+            return null;
+        }
 
         if (index != "")
         {
