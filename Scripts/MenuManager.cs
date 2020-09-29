@@ -131,6 +131,11 @@ public class MenuManager : MonoBehaviour
         currentPanel = panel;
     }
 
+    public void setPanel(string panel, bool show)
+    {
+        panels.setPanel(panel, show,false);
+    }
+
     public void goBack()
     {
         GameObject panel = returnCurrentPanel();
