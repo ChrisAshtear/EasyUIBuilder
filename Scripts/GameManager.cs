@@ -39,6 +39,10 @@ public class GameManager : MonoBehaviour
             data.SetData(vals);
 
         }
+        else
+        {
+            data.SetData(vals);
+        }
     }
 
 
