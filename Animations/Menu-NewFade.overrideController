@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Menu-NewFade
+  m_Controller: {fileID: 9100000, guid: 66cc5b31a6ed3c34198bf917886b262f, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 69fcb87eb6c911744951f602fab93cbe, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: cf5e763b39d9c9246b747108cae3e817, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: dde2bb12ac1f0a94db275e2158e03c87, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6e47210b2ea66ea4b80e3ac408a516cc, type: 2}

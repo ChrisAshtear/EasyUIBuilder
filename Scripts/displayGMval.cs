@@ -19,7 +19,7 @@ public class displayGMval : MonoBehaviour
     }
 
     // Update is called once per frame
-    void updateField()
+    public void updateField()
     {
         if (textfield != null)
         {
@@ -30,5 +30,15 @@ public class displayGMval : MonoBehaviour
             txtmesh.text = GameManager.ins.getUIVal(valueToDisplay);
         }
         
+    }
+
+    private void OnEnable()
+    {
+        updateField();
+    }
+
+    private void Awake()
+    {
+        updateField();
     }
 }

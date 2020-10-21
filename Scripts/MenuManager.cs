@@ -35,7 +35,8 @@ public class MenuManager : MonoBehaviour
     public GameObject selectedItem;
 
     public bool changeScene = true;
-
+     
+    private GameObject msgPanel;
     public GameObject returnCurrentPanel()
     {
         return panels.returnPanel(currentPanel);
@@ -245,6 +246,18 @@ public class MenuManager : MonoBehaviour
         return c ?? projectHandler.pData.menuConfirm;
     }
 
+    public static void statusMessage(string message,float time = 1)
+    {
+        GameManager.ins.setUIVal("message", message);
+        ins.panels.showPanel("MessagePanel",false);
+        ins.msgPanel = ins.panels.returnPanel("MessagePanel");
+        ins.Invoke("endStatusMessage", time);
+    }
+
+    public void endStatusMessage()
+    {
+        msgPanel.GetComponent<doAnimAndSleep>().doAnim();
+    }
 
     public void toggleUIelement(GameObject obj)
     {
