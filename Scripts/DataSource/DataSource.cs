@@ -276,7 +276,7 @@ public class DataSource : ScriptableObject
                 {
                     continue;
                 }
-                allVals.Add(val.ToString(), key.ToString());
+                allVals.Add(key.ToString(), val.ToString());
                 // do something with entry.Value or entry.Key
             }
 
@@ -300,6 +300,11 @@ public class DataSource : ScriptableObject
     public virtual string getFieldFromItemID(string id, string field)
     {
         return getFieldObjFromItemID(id, field).ToString();
+    }
+
+    public virtual bool containsID(string id)
+    {
+        return data.ContainsKey(id);
     }
 
     public virtual object getFieldObjFromItemID(string id, string field)
