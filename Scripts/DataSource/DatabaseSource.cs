@@ -17,6 +17,8 @@ public class DatabaseSource : ScriptableObject
 
     public Dictionary<string, DataSource> tables;
 
+    public Dictionary<string, string> displayCodes;
+
     public string primaryKey = "";
 
     protected string selectedKey = "NA";
@@ -42,6 +44,23 @@ public class DatabaseSource : ScriptableObject
     private void OnEnable()
     {
 
+    }
+
+    public virtual List<string> getTables()
+    {
+        if (tables != null)
+        {
+            List<string> tableList = new List<string>();
+            foreach (DataSource source in tables.Values)
+            {
+                if (!tableList.Contains(source.name))
+                {
+                    tableList.Add(source.name) ;
+                }
+            }
+            return tableList;
+        }
+        return new List<string>();
     }
 
     public bool isDataReady()

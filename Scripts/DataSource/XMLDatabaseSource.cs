@@ -9,25 +9,6 @@ using System.Xml.Linq;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/DatabaseSource/XMLDatabaseSource", order = 1)]
 public class XMLDatabaseSource : DatabaseSource
 {
-    public string sourceName;
-    public string addressOfData;
-    protected bool dataReady = false;
-    public DataType type;
-
-    public delegate void DataReadyHandler();
-    public event DataReadyHandler onDataReady;
-
-    public Dictionary<string, DataSource> tables;
-
-    public string primaryKey = "";
-
-    protected string selectedKey = "NA";
-
-    public delegate void SelectionChangedHandler();
-    public event SelectionChangedHandler selectionChanged;
-
-    public delegate void DataChangedHandler();
-    public event DataChangedHandler dataChanged;
 
     //Props
     public XMLDatabaseSource()
@@ -37,11 +18,20 @@ public class XMLDatabaseSource : DatabaseSource
 
     private void Awake()
     {
+        type = DataType.XML;
+        LoadData();
+    }
+
+    private void OnEnable()
+    {
+
         LoadData();
     }
 
     public override void LoadData()
     {
+        tables = new Dictionary<string, DataSource>();
+        displayCodes = new Dictionary<string, string>();
         dataReady = false;
         if (sourceName != "")
         {
@@ -56,12 +46,45 @@ public class XMLDatabaseSource : DatabaseSource
 #if !UNITY_WEBGL
             XDocument doc = XDocument.Load(Application.streamingAssetsPath + "\\" + sourceName);
 #endif
-
+            bool firstElement = true;
+            DataSource currentTable = null;
 
             foreach (XElement element in doc.Descendants())
             {
-                Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
-                data.Add(list[primaryKey].ToString(), list);
+                if(firstElement)//Root
+                {
+                    firstElement = false;
+                    continue;
+                }
+                if(element.HasElements && element.Attributes().Count() <=1)//Table
+                {
+                    DataSource table = new DataSource();
+                    table.name = element.Name.ToString();
+                    tables.Add(element.Name.ToString(), table);
+                    currentTable = table;
+                    table.data = new Dictionary<string, Dictionary<string, object>>();
+                    if (element.Attribute("displayCode") != null)
+                    {
+                        displayCodes.Add(element.Name.ToString(), element.Attribute("displayCode").Value);
+                    }
+                }
+                else if(element.Attributes().Count() > 1 && element.Parent.Name.ToString() == currentTable.name)//Entry
+                {                  
+                    Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
+                    currentTable.data.Add(list[primaryKey].ToString(), list);
+                }
+                else if(element.HasAttributes)
+                {       
+                    DataSource table = new DataSource();
+                    table.name = element.Name.ToString();
+                    tables.Add(element.Name.ToString(), table);
+                    currentTable = table;
+                    table.data = new Dictionary<string, Dictionary<string, object>>();
+                    Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
+                    currentTable.data.Add(table.name, list);
+                }
+                //Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
+                //data.Add(list[primaryKey].ToString(), list);
                 Debug.Log(element);
             }
             if (data.Count > 0)

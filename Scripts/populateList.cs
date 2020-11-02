@@ -36,12 +36,15 @@ public class ListProps
     public Color32 color = Color.grey;
     public UnityEvent ev;
     public OnSelectListEvent ev1;
-    
+
+    public DatabaseSource db;
+    public string tableName;
     public DataSource data;
     public string field;
     //public string option;
     public listObjProps displayObj;
     public int fieldIdx;
+    public int tableIdx;
 }
 
 
@@ -55,8 +58,10 @@ public class ListDrawer : PropertyDrawer
     private float expandedHeight = 50;//extra space for event control +/- buttons
     // Draw the property inside the given rect
     int _choiceIndex;
+    int _tableChoiceIndex;
 
     List<string> allFields = new List<string>();
+    List<string> allTables = new List<string>();
     string currentData = "null";
     // Have we loaded the prefs yet
     private static bool prefsLoaded = false;
@@ -116,13 +121,26 @@ public class ListDrawer : PropertyDrawer
         // Calculate rects
         var labelRect = getRect(50,position);
         var amountRect = getRect(100, position);
+        var amountRect2 = getRect(100, position);
+        var tableRect = getRect(100, position);
         var unitRect = getRect(100, position);
         var colorRect = getRect(100, position);
         var nameRect = getRect(100, position);
         var acRect = getRect(100, position);
 
         DataSource dataProp = (DataSource)property.FindPropertyRelative("data").objectReferenceValue;
-        if(dataProp != null && dataProp.name != currentData)
+        DatabaseSource dataProp2 = (DatabaseSource)property.FindPropertyRelative("db").objectReferenceValue;
+        bool isRealTime = false;
+        if(dataProp2 == null || dataProp2?.type == DataType.Realtime)
+        {
+            isRealTime = true;
+        }
+        if(dataProp2 != null)
+        {
+            allTables = dataProp2.getTables();
+            currentData = dataProp2.name;
+        }
+        if(dataProp != null)
         {
             allFields = dataProp.getFieldSimple();
             currentData = dataProp.name;
@@ -130,25 +148,27 @@ public class ListDrawer : PropertyDrawer
         else if(dataProp == null)
         {
             allFields = new List<string>();
-            currentData = "mull";
+            currentData = "null";
         }
         
         //dataProp.GetType()
 
         SerializedProperty userIndexProperty = property.FindPropertyRelative("fieldIdx");
         SerializedProperty fieldSelection = property.FindPropertyRelative("field");
+        SerializedProperty tableIndexProperty = property.FindPropertyRelative("tableIdx");
+
+        SerializedProperty table = property.FindPropertyRelative("tableName");
 
         GUIutil.doPrefixLabel(ref labelRect, "Label");
         EditorGUI.PropertyField(labelRect, property.FindPropertyRelative("label"), GUIContent.none);
 
         EditorGUI.BeginChangeCheck();
+
         GUIutil.doPrefixLabel(ref unitRect, "Field");
-        _choiceIndex = EditorGUI.Popup(unitRect, userIndexProperty.intValue, allFields.ToArray());
-        if (EditorGUI.EndChangeCheck())
-        {
-            userIndexProperty.intValue = _choiceIndex;
-            fieldSelection.stringValue = allFields[_choiceIndex];
-        }
+        
+        
+
+        
 
 
 
@@ -177,13 +197,37 @@ public class ListDrawer : PropertyDrawer
             EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("displayObj"), GUIContent.none);
         }
 
-        GUIutil.doPrefixLabel(ref amountRect, "Data Source");
+        GUIutil.doPrefixLabel(ref amountRect, "D.Source(Old)");
         EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("data"), GUIContent.none);
+
+        GUIutil.doPrefixLabel(ref amountRect2, "DB Source");
+        EditorGUI.PropertyField(amountRect2, property.FindPropertyRelative("db"), GUIContent.none);
+
+        GUIutil.doPrefixLabel(ref tableRect, "Table");
+        if (!isRealTime)
+        {
+            _tableChoiceIndex = EditorGUI.Popup(tableRect, tableIndexProperty.intValue, allTables.ToArray());
+            _choiceIndex = EditorGUI.Popup(unitRect, userIndexProperty.intValue, allFields.ToArray());
+        }
+        else
+        {
+            EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("field"), GUIContent.none);
+            EditorGUI.PropertyField(tableRect, property.FindPropertyRelative("tableName"), GUIContent.none);
+        }
+        
 
         GUIutil.doPrefixLabel(ref colorRect, "DropDown Type");
         EditorGUI.PropertyField(colorRect, property.FindPropertyRelative("onSelect"), GUIContent.none);
-        
-        
+
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            userIndexProperty.intValue = _choiceIndex;
+            fieldSelection.stringValue = allFields[_choiceIndex];
+            tableIndexProperty.intValue = _tableChoiceIndex;
+            table.stringValue = allTables[_tableChoiceIndex];
+        }
+
         // Set indent back to what it was
         EditorGUI.indentLevel = indent;
 

@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-public enum DataType {  XML, SQL,JSON,Choice, Web}; // we need custom handlers for all these.
+public enum DataType {  XML, SQL,JSON,Choice, Web, Realtime}; // we need custom handlers for all these.
 
 public enum fieldType { str, integer, flt };
 [System.Serializable]
 public class DataSource : ScriptableObject
 {
+    //public string name;
     public string sourceName;
     public string addressOfData;
     protected bool dataReady = false;
