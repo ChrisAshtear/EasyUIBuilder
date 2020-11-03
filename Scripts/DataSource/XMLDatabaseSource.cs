@@ -60,7 +60,8 @@ public class XMLDatabaseSource : DatabaseSource
                 {
                     DataSource table = new DataSource();
                     table.name = element.Name.ToString();
-                    tables.Add(element.Name.ToString(), table);
+                    table.parentData = this;
+                    addTable(element.Name.ToString(), table);
                     currentTable = table;
                     table.data = new Dictionary<string, Dictionary<string, object>>();
                     if (element.Attribute("displayCode") != null)
@@ -77,11 +78,13 @@ public class XMLDatabaseSource : DatabaseSource
                 {       
                     DataSource table = new DataSource();
                     table.name = element.Name.ToString();
-                    tables.Add(element.Name.ToString(), table);
+                    table.parentData = this;
+                    addTable(element.Name.ToString(), table);
                     currentTable = table;
                     table.data = new Dictionary<string, Dictionary<string, object>>();
                     Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
                     currentTable.data.Add(table.name, list);
+                    table.setReady();
                 }
                 //Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
                 //data.Add(list[primaryKey].ToString(), list);

@@ -33,9 +33,19 @@ public class DataSource : ScriptableObject
 
     public delegate void DataChangedHandler();
     public event DataChangedHandler dataChanged;
+
+    public DatabaseSource parentData;
     public DataSource()
     {
         //condition = maxCond;
+    }
+
+    private void OnDestroy()
+    {
+        if(parentData != null)
+        {
+            parentData.dropTable(this.name);
+        }
     }
 
     public void UI_SelectEntry(selectListItem e)
@@ -69,6 +79,11 @@ public class DataSource : ScriptableObject
             onDataReady();
         }
         
+    }
+
+    public void setReady()
+    {
+        dataReady = true;
     }
 
     public virtual string getRandomFieldVal(string fieldName)
@@ -180,7 +195,7 @@ public class DataSource : ScriptableObject
 
     public virtual List<string> getFieldSimple()
     {
-        if (dataReady && data != null)
+        if (data != null)
         {
             List<string> fields = new List<string>();
             foreach (Dictionary<string, object> dict in data.Values)

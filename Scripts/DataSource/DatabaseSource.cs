@@ -46,6 +46,14 @@ public class DatabaseSource : ScriptableObject
 
     }
 
+    public void dropTable(string tableName)
+    {
+        if(tables.ContainsKey(tableName))
+        {
+            tables.Remove(tableName);
+        }
+    }
+
     public virtual List<string> getTables()
     {
         if (tables != null)
@@ -61,6 +69,42 @@ public class DatabaseSource : ScriptableObject
             return tableList;
         }
         return new List<string>();
+    }
+
+    public virtual void addTable(string tableName, DataSource table)
+    {
+        if (!tables.ContainsKey(tableName))
+        {
+            tables.Add(tableName, table);
+        }
+    }
+
+    public virtual DataSource newTable(string tableName)
+    {
+        if (!tables.ContainsKey(tableName))
+        {
+            DataSource table = new DataSource();
+            table.name = tableName;
+            tables.Add(tableName, table);
+            table.parentData = this;
+            return table;
+        }
+        else
+        {
+            return getTable(tableName);
+        }
+    }
+
+    public virtual bool containsTable(string id)
+    {
+        return tables.ContainsKey(id);
+    }
+
+    public virtual DataSource getTable(string tableName)
+    {
+        DataSource table = new DataSource();
+        tables?.TryGetValue(tableName, out table);
+        return table;
     }
 
     public bool isDataReady()
@@ -173,11 +217,4 @@ public class DatabaseSource : ScriptableObject
     {
         return new Dictionary<string, fieldType>();
     }
-
-    public virtual bool containsTable(string id)
-    {
-        return tables.ContainsKey(id);
-    }
-
-
 }

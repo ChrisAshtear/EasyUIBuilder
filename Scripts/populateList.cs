@@ -135,14 +135,16 @@ public class ListDrawer : PropertyDrawer
         {
             isRealTime = true;
         }
-        if(dataProp2 != null)
+        if(dataProp2 != null && !isRealTime )
         {
             allTables = dataProp2.getTables();
             currentData = dataProp2.name;
         }
-        if(dataProp != null)
+        if(dataProp != null && dataProp2 != null && !isRealTime)
         {
-            allFields = dataProp.getFieldSimple();
+            //allFields = dataProp.getFieldSimple();
+            DataSource data = dataProp2.getTable(property.FindPropertyRelative("tableName").stringValue);
+            allFields = data?.getFieldSimple() ?? new List<string>();
             currentData = dataProp.name;
         }
         else if(dataProp == null)
@@ -165,12 +167,6 @@ public class ListDrawer : PropertyDrawer
         EditorGUI.BeginChangeCheck();
 
         GUIutil.doPrefixLabel(ref unitRect, "Field");
-        
-        
-
-        
-
-
 
         //when changing fields, field is first set to null.
         //keep a list of choices, when field is null, reset choices. if list is null, get choices.
@@ -223,9 +219,24 @@ public class ListDrawer : PropertyDrawer
         if (EditorGUI.EndChangeCheck())
         {
             userIndexProperty.intValue = _choiceIndex;
-            fieldSelection.stringValue = allFields[_choiceIndex];
+            if(allFields.Count > _choiceIndex)
+            {
+                fieldSelection.stringValue = allFields[_choiceIndex];
+            }
+            else if(!isRealTime)
+            {
+                fieldSelection.stringValue = "";
+            }
+            if (allTables.Count > _tableChoiceIndex)
+            {
+                table.stringValue = allTables[_tableChoiceIndex];
+            }
+            else if(!isRealTime)
+            {
+                table.stringValue = "";
+            }
             tableIndexProperty.intValue = _tableChoiceIndex;
-            table.stringValue = allTables[_tableChoiceIndex];
+            
         }
 
         // Set indent back to what it was
@@ -265,10 +276,6 @@ public class populateList : MonoBehaviour, I_ItemMenu
 
     void Reset()
     {
-        //props = new List<DropDownProps>();
-        //props.Add(new DropDownProps());
-        //props[0].label= "";
-        //props[0].color = Color.grey;
         layoutGroup = gameObject;
         projectHandler.init();
         prefab = projectHandler.pData.defaultButton;
@@ -297,7 +304,8 @@ public class populateList : MonoBehaviour, I_ItemMenu
 
     public void Populate()
     {
-        if(!props.data.isDataReady())
+        bool dataReady = props.data?.isDataReady() ?? false;
+        if (!dataReady && props.db == null)
         {
             return;
         }
@@ -305,13 +313,26 @@ public class populateList : MonoBehaviour, I_ItemMenu
 
         Clear();
 
-        List<string> keys = props.data.getFieldFromAllItems(props.data.primaryKey);
+        DataSource d;
+        string primaryKey = "";
+        if(props.db != null)
+        {
+            d = props.db.getTable(props.tableName);
+            primaryKey = d.primaryKey;
+        }
+        else
+        {
+            primaryKey = props.data.primaryKey;
+            d = props.data;
+        }
+
+        List<string> keys = d.getFieldFromAllItems(primaryKey);
 
         foreach(string key in keys)
         {
             if (filterVar != "")
             {
-                string value = props.data.getFieldFromItemID(key, filterVar);
+                string value = d.getFieldFromItemID(key, filterVar);
                 if((filterValue != value && !showItemsNOTMatchingFilter) || (showItemsNOTMatchingFilter && filterValue == value))
                 {
                     continue;
@@ -322,7 +343,7 @@ public class populateList : MonoBehaviour, I_ItemMenu
             obj.transform.parent = layoutGroup.transform;
             obj.name = key;
             FillFromSource fill = obj.GetComponent<FillFromSource>();
-            fill.data = props.data;
+            fill.data = d;
             fill.index = key;
             displayObjDetails display = obj.GetComponent<displayObjDetails>();
             display.alwaysVisible = alwaysVisible;
@@ -337,7 +358,7 @@ public class populateList : MonoBehaviour, I_ItemMenu
             }
             foreach (DataFieldMap m in fill.FieldMapping)
             {
-                m.data = props.data;
+                m.data = d;
                 SelectableItem item = obj.GetComponent<SelectableItem>();
                 switch (props.onSelect)
                 {
