@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System;
 
 [System.Serializable]
 public class DatabaseSource : ScriptableObject
@@ -32,13 +33,18 @@ public class DatabaseSource : ScriptableObject
     //Props
     public DatabaseSource()
     {
-        //condition = maxCond;
+
     }
 
     public void UI_SelectEntry(selectListItem e)
     {
-        selectItem(e.index);
+        selectItem(e.index,e.fill.data);
         Debug.Log(e.ToString());
+    }
+
+    private void Awake()
+    {
+
     }
 
     private void OnEnable()
@@ -46,9 +52,36 @@ public class DatabaseSource : ScriptableObject
 
     }
 
+    public void addSelectCallback(string tableName,Action<DataSource> action)
+    {
+        List<string> tableNames = new List<string>(tableName.Split(','));
+        foreach (string table in tableNames)
+        {
+            DataSource d = getTable(table);
+            if(d != null)
+            {
+                d.selectChanged += action;
+            }
+        }
+    }
+
+    public void addChangedCallback(string tableName, Action<DataSource> action)
+    {
+        List<string> tableNames = new List<string>(tableName.Split(','));
+        foreach (string table in tableNames)
+        {
+            DataSource d = getTable(table);
+            if (d != null)
+            {
+                d.datChanged += action;
+            }
+        }
+    }
+
     public void dropTable(string tableName)
     {
-        if(tables.ContainsKey(tableName))
+        tableName = tableName.ToLower();
+        if (tables.ContainsKey(tableName))
         {
             tables.Remove(tableName);
         }
@@ -68,11 +101,13 @@ public class DatabaseSource : ScriptableObject
             }
             return tableList;
         }
+        else { LoadData(); }
         return new List<string>();
     }
 
     public virtual void addTable(string tableName, DataSource table)
     {
+        tableName = tableName.ToLower();
         if (!tables.ContainsKey(tableName))
         {
             tables.Add(tableName, table);
@@ -81,6 +116,7 @@ public class DatabaseSource : ScriptableObject
 
     public virtual DataSource newTable(string tableName)
     {
+        tableName = tableName.ToLower();
         if (!tables.ContainsKey(tableName))
         {
             DataSource table = new DataSource();
@@ -102,6 +138,7 @@ public class DatabaseSource : ScriptableObject
 
     public virtual DataSource getTable(string tableName)
     {
+        tableName = tableName.ToLower();
         DataSource table = new DataSource();
         tables?.TryGetValue(tableName, out table);
         return table;
@@ -109,7 +146,7 @@ public class DatabaseSource : ScriptableObject
 
     public bool isDataReady()
     {
-        if (tables == null)
+        if (tables == null || tables.Count == 0)
         {
             return false;
         }
@@ -129,18 +166,10 @@ public class DatabaseSource : ScriptableObject
 
     }
 
-   /* public virtual string getSelectedVal(string fieldName)
+    protected void doOnDataChanged()
     {
-        DataSource entry = getSelected();
-        if (entry != null)
-        {
-            if (entry.ContainsKey(fieldName))
-            {
-                return entry[fieldName].ToString();
-            }
-        }
-        return "Not Found";
-    }*/
+        if (dataChanged != null) { dataChanged(); }
+    }
 
     public virtual DataSource getSelected()
     {
@@ -155,32 +184,6 @@ public class DatabaseSource : ScriptableObject
         }
     }
 
-    public virtual void changeSelection(int amt)
-    {
-
-        List<string> keys = tables.Keys.AsEnumerable().ToList();
-        if (selectedKey == "NA")
-        {
-            selectedKey = keys[0];
-            return;
-        }
-        int curIdx = keys.IndexOf(selectedKey);
-        curIdx += amt;
-        if (curIdx >= keys.Count)
-        {
-            curIdx = 0;
-        }
-        if (curIdx < 0)
-        {
-            curIdx = keys.Count - 1;
-        }
-        selectedKey = keys[curIdx];
-        if (selectionChanged != null)
-        {
-            selectionChanged();
-        }
-    }
-
     public void changedData()
     {
         if (dataChanged != null && selectedKey != "NA")
@@ -189,13 +192,14 @@ public class DatabaseSource : ScriptableObject
         }
     }
 
-    public virtual void selectPrev()
+    public virtual void selectNextItemInTable(string table)
     {
-        changeSelection(-1);
+        getTable(table)?.selectNext();
     }
-    public virtual void selectNext()
+
+    public virtual void selectPrevItemInTable(string table)
     {
-        changeSelection(1);
+        getTable(table)?.selectPrev();
     }
 
     public virtual string getSelectedKey()
@@ -203,9 +207,10 @@ public class DatabaseSource : ScriptableObject
         return selectedKey;
     }
 
-    public virtual void selectItem(string key)
+    public virtual void selectItem(string key,DataSource table)
     {
         selectedKey = key;
+        table?.selectItem(key);
         if (selectionChanged != null)
         {
             selectionChanged();

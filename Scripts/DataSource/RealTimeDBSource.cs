@@ -42,16 +42,20 @@ public class RealTimeDBSource : DatabaseSource
         {
             data.updateData();
         }
+        //doOnDataChanged();
     }
 
     public override DataSource newTable(string tableName)
     {
+        tableName = tableName.ToLower();
         if (!tables.ContainsKey(tableName))
         {
             RTDataSource table = new RTDataSource();
             table.name = tableName;
             tables.Add(tableName, table);
             table.parentData = this;
+            doOnDataChanged();
+
             return table;
         }
         else
@@ -62,6 +66,7 @@ public class RealTimeDBSource : DatabaseSource
 
     public void SetData(string tableName,object data)
     {
+        tableName = tableName.ToLower();
         RTDataSource d = newTable(tableName) as RTDataSource;
         if(data == null || d == null)
         {
@@ -69,7 +74,10 @@ public class RealTimeDBSource : DatabaseSource
         }
         d.SetData(data);
         d.primaryKey = "hash";
+        dataReady = true;
+        doOnDataChanged();
     }
-
-
 }
+
+
+

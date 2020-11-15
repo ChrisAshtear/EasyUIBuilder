@@ -101,6 +101,11 @@ public class RTDataSource : DataSource
         }
     }
 
+    public object getRawData()
+    {
+        return sourceData;
+    }
+
     private void Awake()
     {
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System;
 
 public enum DataType {  XML, SQL,JSON,Choice, Web, Realtime}; // we need custom handlers for all these.
 
@@ -33,6 +34,9 @@ public class DataSource : ScriptableObject
 
     public delegate void DataChangedHandler();
     public event DataChangedHandler dataChanged;
+
+    public Action<DataSource> datChanged;
+    public Action<DataSource> selectChanged;
 
     public DatabaseSource parentData;
     public DataSource()
@@ -119,6 +123,10 @@ public class DataSource : ScriptableObject
 
     public virtual Dictionary<string, object> getSelected()
     {
+        if(selectedKey == "NA" && dataReady && data.Count > 0)
+        {
+            selectedKey = data.Keys.ToList()[0];
+        }
         if (dataReady && data != null && data.ContainsKey(selectedKey))
         {
             Dictionary<string, object> entry = data[selectedKey];
@@ -150,6 +158,7 @@ public class DataSource : ScriptableObject
             curIdx = keys.Count-1;
         }
         selectedKey = keys[curIdx];
+        selectChanged?.Invoke(this);
         if(selectionChanged != null)
         {
             selectionChanged();
@@ -158,6 +167,7 @@ public class DataSource : ScriptableObject
 
     public void changedData()
     {
+        datChanged?.Invoke(this);
         if(dataChanged != null && selectedKey != "NA")
         {
             dataChanged();
@@ -181,6 +191,7 @@ public class DataSource : ScriptableObject
     public virtual void selectItem(string key)
     {
         selectedKey = key;
+        selectChanged?.Invoke(this);
         if (selectionChanged != null)
         {
             selectionChanged();
@@ -327,8 +338,7 @@ public class DataSource : ScriptableObject
     {
         if (dataReady/* && id > 0 && id < data.Count*/)
         {
-
-            Dictionary<string, object> dict = data[id];
+            data.TryGetValue(id, out Dictionary<string, object> dict);
 
             object val;
             dict.TryGetValue(field, out val);
@@ -336,6 +346,16 @@ public class DataSource : ScriptableObject
             return val ?? "none";
         }
         return "";
+    }
+
+    public virtual Dictionary<string,object> getObjFromItemID(string id)
+    {
+        if (dataReady/* && id > 0 && id < data.Count*/)
+        {
+            data.TryGetValue(id, out Dictionary<string, object> dict);
+            return dict;
+        }
+        return new Dictionary<string, object>();
     }
 
     public virtual string setFieldFromItemID(string id, string field,string value)

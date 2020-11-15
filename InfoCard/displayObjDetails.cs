@@ -30,9 +30,11 @@ public class displayObjDetails : MonoBehaviour
     public bool update = false;
 
     public DataSource source;
+    public DatabaseSource db;
+    public string tableName;
     [Tooltip("Do NOT check when used in a prefab. Only for use with a UI Object that contains this script")]
     public bool refreshOnNewSelection = false;
-
+    public bool defaultSelect = false;
     //USE STRING TO HANDLE WHAT TO DISPLAY!!!!! 
     //ex:
     //equippedItem.RateOfFire
@@ -58,25 +60,42 @@ public class displayObjDetails : MonoBehaviour
             uiObject = MenuManager.ins.detailsCard.GetComponentInChildren<listObjProps>();
         }
 
-        Invoke("Init", 0.1f);
-        InvokeRepeating("uiUpdate", updateTick, updateTick);
+        if (db != null)
+        {
+            source = db.getTable(tableName);
+        }
+        //InvokeRepeating("uiUpdate", updateTick, updateTick);
     }
 
     void Init()
     {
         initCallback();
-        //gameObject.GetComponentInChildren<Text>().text = ingName;
-
+        if(defaultSelect)
+        {
+            refreshData();
+        }
     }
 
     public void initCallback()
     {
         if(source != null && refreshOnNewSelection)
         {
-            source.selectionChanged -= refreshData;
             source.selectionChanged += refreshData;
-            source.dataChanged -= refreshData;
             source.dataChanged += refreshData;
+        }
+    }
+
+    private void OnEnable()
+    {
+        Invoke("Init", 0.1f);
+    }
+
+    private void OnDisable()
+    {
+        if(source != null)
+        {
+            source.dataChanged -= refreshData;
+            source.selectionChanged -= refreshData;
         }
     }
 
@@ -85,6 +104,10 @@ public class displayObjDetails : MonoBehaviour
         if(source.getSelected() != null)
         {
             data.setData(source.getSelected());
+        }
+        else
+        {
+            return;
         }
        
         uiObject.resetVals();
@@ -118,7 +141,9 @@ public class displayObjDetails : MonoBehaviour
         {
             return;
         }
+        displayCode = displayCode.Replace("\r","");
         string[] lines = displayCode.Split('\n');
+
         comparisons.Clear();
         string currentComparison = "";
         comparisons.Add("none", "");

@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
 
     private string savePath;
 
-    [HideInInspector]public List<RTDataSource> sources;
     void Awake()
     {
         ins = this;
@@ -31,27 +30,10 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void setRTData(RTDataSource data, object vals)
-    {
-        if (!sources.Contains(data))
-        {
-            sources.Add(data);
-            data.SetData(vals);
-
-        }
-        else
-        {
-            data.SetData(vals);
-        }
-    }
-
-
-
     public void gameStart()
     {
         CancelInvoke();
 
-        sources = new List<RTDataSource>();
         ins = this;
         finishGameStart();
     }
@@ -59,14 +41,6 @@ public class GameManager : MonoBehaviour
     public virtual void finishGameStart()
     {
 
-    }
-
-    public void updateData()
-    {
-        foreach (RTDataSource data in sources)
-        {
-            data.updateData();
-        }
     }
 
     public void OnLevelWasLoaded(int level)

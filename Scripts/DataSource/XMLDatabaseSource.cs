@@ -11,23 +11,13 @@ public class XMLDatabaseSource : DatabaseSource
 {
 
     //Props
-    public XMLDatabaseSource()
-    {
-        //condition = maxCond;
-    }
 
     private void Awake()
     {
         type = DataType.XML;
-        LoadData();
     }
 
-    private void OnEnable()
-    {
-
-        LoadData();
-    }
-
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public override void LoadData()
     {
         tables = new Dictionary<string, DataSource>();
@@ -63,11 +53,14 @@ public class XMLDatabaseSource : DatabaseSource
                     table.parentData = this;
                     addTable(element.Name.ToString(), table);
                     currentTable = table;
+                    table.primaryKey = primaryKey;
                     table.data = new Dictionary<string, Dictionary<string, object>>();
                     if (element.Attribute("displayCode") != null)
                     {
                         displayCodes.Add(element.Name.ToString(), element.Attribute("displayCode").Value);
+                        table.displayCode = element.Attribute("displayCode").Value;
                     }
+                    table.setReady();
                 }
                 else if(element.Attributes().Count() > 1 && element.Parent.Name.ToString() == currentTable.name)//Entry
                 {                  
@@ -81,6 +74,7 @@ public class XMLDatabaseSource : DatabaseSource
                     table.parentData = this;
                     addTable(element.Name.ToString(), table);
                     currentTable = table;
+                    table.primaryKey = primaryKey;
                     table.data = new Dictionary<string, Dictionary<string, object>>();
                     Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
                     currentTable.data.Add(table.name, list);
@@ -90,12 +84,12 @@ public class XMLDatabaseSource : DatabaseSource
                 //data.Add(list[primaryKey].ToString(), list);
                 Debug.Log(element);
             }
-            if (data.Count > 0)
+            if (tables.Count > 0)
             {
                 dataReady = true;
-                doOnDataReady();
+                
             }
-
+            doOnDataReady();
         }
 
     }

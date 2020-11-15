@@ -200,12 +200,14 @@ public class ListDrawer : PropertyDrawer
         EditorGUI.PropertyField(amountRect2, property.FindPropertyRelative("db"), GUIContent.none);
 
         GUIutil.doPrefixLabel(ref tableRect, "Table");
-        if (!isRealTime)
+        /*if (!isRealTime)
         {
             _tableChoiceIndex = EditorGUI.Popup(tableRect, tableIndexProperty.intValue, allTables.ToArray());
             _choiceIndex = EditorGUI.Popup(unitRect, userIndexProperty.intValue, allFields.ToArray());
         }
         else
+        */
+        //disabled due to loading issues with tables fucking things up while transitioning away from datasource.
         {
             EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("field"), GUIContent.none);
             EditorGUI.PropertyField(tableRect, property.FindPropertyRelative("tableName"), GUIContent.none);
@@ -283,29 +285,50 @@ public class populateList : MonoBehaviour, I_ItemMenu
     // Start is called before the first frame update
     void Start()
     {
-        if(populateOnStart)
+        if (props.db != null)
         {
+            props.db.onDataReady += DB_Loaded;
+            //props.db.dataChanged += Refresh;
+            if (populateOnStart && props.db.isDataReady())
+            {
+                props.db.getTable(props.tableName).dataChanged += Refresh;
+                Populate();
+            }
+        }
+    }
+
+    private void DB_Loaded()
+    {
+        if (populateOnStart && props.db.isDataReady())
+        {
+            props.db.getTable(props.tableName).dataChanged += Refresh;
             Populate();
         }
-        if(autoRefresh)
-        {
-            InvokeRepeating("Refresh", refreshRate, refreshRate);
-        }
-        
     }
 
     private void OnEnable()
     {
-        if(populateOnStart)
+        if(props.db != null)
         {
-            Populate();
+            props.db.onDataReady += Populate;
+            props.db.dataChanged += Refresh;
+        }
+        Populate();
+    }
+
+    private void OnDisable()
+    {
+        if (props.db != null)
+        {
+            props.db.onDataReady -= Populate;
+            props.db.dataChanged -= Refresh;
         }
     }
 
     public void Populate()
     {
         bool dataReady = props.data?.isDataReady() ?? false;
-        if (!dataReady && props.db == null)
+        if ((!dataReady && props.db == null) || !props.db.isDataReady())
         {
             return;
         }
@@ -397,6 +420,13 @@ public class populateList : MonoBehaviour, I_ItemMenu
     public void setData(DataSource d)
     {
         props.data = d;
+        Clear();
+        Invoke("Populate", 0.2f);
+    }
+
+    public void setTable(string t)
+    {
+        props.tableName = t;
         Clear();
         Invoke("Populate", 0.2f);
     }
