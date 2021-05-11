@@ -60,6 +60,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.28627452}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -266,7 +267,7 @@ MonoBehaviour:
     fieldIdx: 6
   data: {fileID: 0}
   index: sentry.lf
-  spriteSheet: {fileID: 2800000, guid: bccdcfded476d5a44971a167755813a2, type: 3}
+  spriteSheet: {fileID: 2800000, guid: eb11ee82aae225d4abd1f30da426570f, type: 3}
   showLabel: 1
   comparisonVal: 
 --- !u!114 &1850738631286845628
@@ -289,6 +290,11 @@ MonoBehaviour:
   updateTick: 0.2
   selectedSpr: {fileID: 0}
   update: 0
+  source: {fileID: 0}
+  db: {fileID: 0}
+  tableName: 
+  refreshOnNewSelection: 0
+  defaultSelect: 0
 --- !u!114 &9033137052754060509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +308,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 3820202811546189047}
+  highlightSpr: {fileID: 0}
+  activeHighlightSpr: {fileID: 0}
+  activeHighlight: {fileID: 0}
   e_pointerDown:
     m_PersistentCalls:
       m_Calls: []
@@ -365,6 +374,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.001803965, b: 0.8113208, a: 0.60784316}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -438,6 +448,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

@@ -39,6 +39,7 @@ public class ListProps
 
     public DatabaseSource db;
     public string tableName;
+    [HideInInspector]
     public DataSource data;
     public string field;
     //public string option;
@@ -288,12 +289,12 @@ public class populateList : MonoBehaviour, I_ItemMenu
         if (props.db != null)
         {
             props.db.onDataReady += DB_Loaded;
-            //props.db.dataChanged += Refresh;
-            if (populateOnStart && props.db.isDataReady())
+
+            /*if (populateOnStart && props.db.isDataReady())
             {
                 props.db.getTable(props.tableName).dataChanged += Refresh;
                 Populate();
-            }
+            }*/
         }
     }
 

@@ -117,7 +117,9 @@ public class FillFromSource : MonoBehaviour
     public string index;
     public Texture2D spriteSheet;
     public bool showLabel = true;
-    
+
+    public DatabaseSource db;
+    public string tableName;
 
     GenericDataHandler dataHandler;
 
@@ -142,6 +144,10 @@ public class FillFromSource : MonoBehaviour
         display.initCallback();
         foreach (DataFieldMap mapping in FieldMapping)
         {
+            if (mapping.data == null)
+            {
+                mapping.data = data;
+            }
             Text text = mapping.obj.GetComponent<Text>();
             TMPro.TextMeshProUGUI tm = mapping.obj.GetComponent<TMPro.TextMeshProUGUI>();
             if (text == null && tm == null)
@@ -252,7 +258,10 @@ public class FillFromSource : MonoBehaviour
     }
     private void Start()
     {
-        
+        if(db != null)
+        {
+            data = db.getTable(tableName);
+        }
     }
 
     public void initData()

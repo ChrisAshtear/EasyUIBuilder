@@ -34,6 +34,7 @@ public class displayObjDetails : MonoBehaviour
     public string tableName;
     [Tooltip("Do NOT check when used in a prefab. Only for use with a UI Object that contains this script")]
     public bool refreshOnNewSelection = false;
+    public bool refreshOnNewData = false;
     public bool defaultSelect = false;
     //USE STRING TO HANDLE WHAT TO DISPLAY!!!!! 
     //ex:
@@ -80,8 +81,14 @@ public class displayObjDetails : MonoBehaviour
     {
         if(source != null && refreshOnNewSelection)
         {
-            source.selectionChanged += refreshData;
-            source.dataChanged += refreshData;
+            if(refreshOnNewSelection)
+            {
+                source.selectionChanged += refreshData;
+            }
+            if(refreshOnNewData)
+            {
+                source.dataChanged += refreshData;
+            }
         }
     }
 

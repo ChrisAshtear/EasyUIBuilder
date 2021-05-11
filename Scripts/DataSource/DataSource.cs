@@ -185,6 +185,10 @@ public class DataSource : ScriptableObject
 
     public virtual string getSelectedKey()
     {
+        if (selectedKey == "NA" && dataReady && data.Count > 0)
+        {
+            selectedKey = data.Keys.ToList()[0];
+        }
         return selectedKey;
     }
 
@@ -368,7 +372,8 @@ public class DataSource : ScriptableObject
         if (dataReady/* && id > 0 && id < data.Count*/)
         {
 
-            Dictionary<string, object> dict = data[id];
+            Dictionary<string, object> dict;
+            data.TryGetValue(id,out dict);
             if (dict != null)
             {
                 return dict;
