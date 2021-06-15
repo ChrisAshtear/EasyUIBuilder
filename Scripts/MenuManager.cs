@@ -201,7 +201,7 @@ public class MenuManager : MonoBehaviour
 
     public void finishInit()
     {
-        changeMusic(projectHandler.pData.menuMusic);
+        //changeMusic(projectHandler.pData.menuMusic);
     }
 
     
@@ -366,7 +366,7 @@ public class MenuManager : MonoBehaviour
     {
 
         //Check if the Cancel button in Input Manager is down this frame (default is Escape key) and that game is not paused, and that we're not in main menu
-        if (Input.GetButtonDown("Pause") && !GameManager.isPaused && MenuManager.gameRunning) // fix this
+        /*if (Input.GetButtonDown("Pause") && !GameManager.isPaused && MenuManager.gameRunning) // fix this
         {
             //Call the DoPause function to pause the game
             DoPause(true);
@@ -377,7 +377,7 @@ public class MenuManager : MonoBehaviour
             //Call the UnPause function to unpause the game
             UnPause();
         }
-
+        */
     }
 
 

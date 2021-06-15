@@ -53,7 +53,7 @@ public class RealTimeDBSource : DatabaseSource
             RTDataSource table = new RTDataSource();
             table.name = tableName;
             tables.Add(tableName, table);
-            table.parentData = this;
+            //table.parentData = this;
             doOnDataChanged();
 
             return table;
