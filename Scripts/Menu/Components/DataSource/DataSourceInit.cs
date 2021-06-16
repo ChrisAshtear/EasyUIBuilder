@@ -9,7 +9,7 @@ public static class DataSourceInit
 {
     
     private static DatabaseSource[] sources;
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void setupSources()
     {
         sources = Resources.LoadAll<DatabaseSource>("");

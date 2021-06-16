@@ -23,12 +23,15 @@ public class DatabaseSourceEditor : Editor
         //MAP DEFAULT INFORMATION
         //dbsource.name = EditorGUILayout.TextField("Test", dbsource.name);
         List<string> tables = dbsource.getTables();
-        string tableList = "";
-        EditorGUILayout.IntField("Tables", tables.Count);
-        foreach(string t in tables)
+        string tableList = "List of Tables: ";
+        EditorGUILayout.Space();
+        EditorGUILayout.IntField("#Tables", tables.Count);
+        EditorGUILayout.Space();
+        foreach (string t in tables)
         {
             tableList += t + ",";
         }
+        tableList.TrimEnd(',');
         EditorGUILayout.LabelField(tableList);
         //WIDTH - HEIGHT
         //int width = EditorGUILayout.IntField("Map Sprite Width", comp.mapSprites.GetLength(0));
@@ -213,7 +216,7 @@ public class DatabaseSource : ScriptableObject
         {
             onDataReady();
         }
-        tableList.Clear();
+        tableList = new List<string>();
         foreach (DataSource source in tables.Values)
         {
             if (!tableList.Contains(source.name))
