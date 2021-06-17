@@ -252,6 +252,11 @@ public class populateList : MonoBehaviour, I_ItemMenu
 
         IEnumerable<SourceFilter> allFilters = filters.Concat(permanentFilter);
 
+        if (d.displayCode != null)
+        {
+            displayCode = d.displayCode;
+        }
+
         foreach (string key in keys)
         {
             bool filtered = false;
