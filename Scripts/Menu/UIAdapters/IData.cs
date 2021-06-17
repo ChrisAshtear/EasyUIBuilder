@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 public interface IDataLibrary
 {
     IData GetValue(string valueName);
+
+    string GetTxtValue(string valueName);
     void SetValue(string valueName, object value,bool preserve=false);
 
     void AddListener(string valueName, Action<IData> callback);

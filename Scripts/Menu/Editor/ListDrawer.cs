@@ -29,8 +29,7 @@ public class ListDrawer : PropertyDrawer
 
         if (p.intValue == 2 || p.intValue == 3)//custom prop
         {
-            string evName = "ev1";
-            if (p.intValue == 3) { evName = "evData"; }
+            string evName = "evData";
             return EditorGUI.GetPropertyHeight(property.FindPropertyRelative(evName)) + expandedHeight;
         }
         else
@@ -80,8 +79,7 @@ public class ListDrawer : PropertyDrawer
 
         if (p.intValue == 2 || p.intValue == 3)//custom prop
         {
-            string evName = "ev1";
-            if (p.intValue == 3) { evName = "evData"; }
+            string evName = "evData";
             var eventRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
             position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative(evName));
 

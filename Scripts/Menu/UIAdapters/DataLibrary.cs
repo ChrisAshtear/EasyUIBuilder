@@ -113,5 +113,9 @@ public class DataLibrary : IDataLibrary,IDataLibraryReadOnly
             callbackList[valueName]?.Invoke(val);
         }
     }
-    
+
+    public string GetTxtValue(string valueName)
+    {
+        return GetValue(valueName).DisplayValue;
+    }
 }

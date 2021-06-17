@@ -273,6 +273,7 @@ RectTransform:
   m_LocalScale: {x: 0.375, y: 0.375, z: 0.375}
   m_Children:
   - {fileID: 889390686}
+  - {fileID: 1892929032}
   - {fileID: 2072558436}
   m_Father: {fileID: 583918177}
   m_RootOrder: 0
@@ -1029,7 +1030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   props:
     label: 
-    onSelect: 1
+    onSelect: 2
     color:
       serializedVersion: 2
       rgba: 4286611584
@@ -1038,27 +1039,48 @@ MonoBehaviour:
         m_Calls: []
     evData:
       m_PersistentCalls:
-        m_Calls: []
-    ev1:
-      m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1892929036}
+          m_TargetAssemblyTypeName: UIDisplayCodeController, Assembly-CSharp
+          m_MethodName: RefreshData
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     tableName: 
     dataS:
       db: {fileID: 11400000, guid: f8bffc78fef3e244ea6b4e25bc4b2d85, type: 2}
       tableName: Weapons
       ID: UUID
     field: 
-    displayObj: {fileID: 0}
+    displayObj: {fileID: 1892929034}
     fieldIdx: 0
     tableIdx: 0
   layoutGroup: {fileID: 1313750691}
   prefab: {fileID: 8971508063081528159, guid: ce75e0a0872a9fc45acf8c748e9ead94, type: 3}
   populateOnStart: 1
   alwaysVisible: 1
-  newPopulate: 1
   showDefaultItem: 0
   selectDefaultItem: 1
-  displayCode: 
+  displayCode: '#iconIdx|Name
+
+    =
+
+    Description
+
+    Price|BasePrice
+
+    Armor|Armor
+
+    Durability|Durability
+
+    Speed
+    Penalty|Speed'
   filters: []
   permanentFilter: []
   selectedItem: {fileID: 0}
@@ -2296,6 +2318,135 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 322085564918301868, guid: b9249d6ed628e9c4b9a00a652acb1850, type: 3}
   m_PrefabInstance: {fileID: 919999170}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1892929031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1892929032}
+  - component: {fileID: 1892929033}
+  - component: {fileID: 1892929034}
+  - component: {fileID: 1892929035}
+  - component: {fileID: 1892929036}
+  m_Layer: 5
+  m_Name: Body (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1892929032
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892929031}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 81424714}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 6123, y: -1658}
+  m_SizeDelta: {x: 2446.3718, y: 3315.9385}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1892929033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892929031}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a383e9517f61d3643aecfc20dc944c65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackingObject: {fileID: 0}
+  statBarSuffix: 
+--- !u!114 &1892929034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892929031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a28fa17ea4264043857fbb30c113246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  valsList: []
+  saveValsList: []
+  prefabName: {fileID: 6818161871290483502, guid: 47abc4f5611ef694cb5b475b4a2ec259, type: 3}
+  prefabDesc: {fileID: 6818161871290483502, guid: cf0c947415f65644a960ac3cc12f6930, type: 3}
+  prefabHeader: {fileID: 6818161871290483502, guid: b39f621efdb4e9045961f9646ca437eb, type: 3}
+  prefabCustom: {fileID: 6818161871290483502, guid: 907a0dab7169b7d43b7aa7f018099fb3, type: 3}
+  prefabSep: {fileID: 6818161871290483502, guid: 907a0dab7169b7d43b7aa7f018099fb3, type: 3}
+  prefabListObj: {fileID: 322085564918301869, guid: 0060f12257bc5fb4a8d94f14da2d4338, type: 3}
+  horizRows: {fileID: 6818161871290483502, guid: 47abc4f5611ef694cb5b475b4a2ec259, type: 3}
+  vertRows: {fileID: 6818161871290483502, guid: 64ba333341c944b4ebc86bb679b1d29e, type: 3}
+  iconSheet: {fileID: 2800000, guid: dffef66376be4fa480fb02b19edbe903, type: 3}
+  fontColor: {r: 0.09411765, g: 0.078431375, b: 0.14509805, a: 1}
+  Name: 
+--- !u!114 &1892929035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892929031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &1892929036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892929031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3276a0a5156979341b33938a55bffe75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackingObject: {fileID: 0}
+  statBarSuffix: 
+  displayCode: 'Description
+
+    Price|BasePrice
+
+    Armor|Armor
+
+    Durability|Durability
+
+    Speed
+    Penalty|Speed'
+  comparisonVal: 
 --- !u!1 &2055338950
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,7 +2553,7 @@ RectTransform:
   m_Children:
   - {fileID: 460989924}
   m_Father: {fileID: 81424714}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

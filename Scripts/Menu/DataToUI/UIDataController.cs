@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class UIDataController : MonoBehaviour
 {
-    private List<UIDataTag> uiObjects;
+    protected List<UIDataTag> uiObjects;
     public GameObject trackingObject;
     public string statBarSuffix;
     private void Start()
@@ -17,7 +17,7 @@ public class UIDataController : MonoBehaviour
         uiObjects = GetComponentsInChildren<UIDataTag>().ToList();
     }
 
-    public void RefreshData(IDataLibrary data)
+    public virtual void RefreshData(IDataLibrary data)
     {
         uiObjects = GetComponentsInChildren<UIDataTag>(true).ToList();
         foreach (UIDataTag tag in uiObjects)
