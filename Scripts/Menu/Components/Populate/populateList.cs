@@ -256,6 +256,11 @@ public class populateList : MonoBehaviour, I_ItemMenu
         {
             displayCode = d.displayCode;
         }
+        UIDisplayCodeController dc = props.displayObj.GetComponent<UIDisplayCodeController>();
+        if (dc != null)
+        {
+            dc.displayCode = displayCode;
+        }
 
         foreach (string key in keys)
         {

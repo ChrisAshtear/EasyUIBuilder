@@ -1179,6 +1179,7 @@ GameObject:
   - component: {fileID: 6798875864403500071}
   - component: {fileID: 6103344993428754290}
   - component: {fileID: -3051787820570231893}
+  - component: {fileID: 5158608418352393069}
   m_Layer: 5
   m_Name: OwnedEquipItem-InInventory
   m_TagString: Untagged
@@ -1334,3 +1335,19 @@ MonoBehaviour:
   - UICancel
   - UIGameStart
   listIdx: 0
+--- !u!114 &5158608418352393069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971508063081528159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd3e08f5642553d46a0bd1285389d13c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlight: {fileID: 7731550072006192899}
+  e_pointerDown:
+    m_PersistentCalls:
+      m_Calls: []
