@@ -5,67 +5,6 @@ using UnityEditor;
 using System.Linq;
 using System;
 
-[CustomEditor(typeof(DatabaseSource),true)]
-public class DatabaseSourceEditor : Editor
-{
-
-    DatabaseSource dbsource;
-    static bool showTileEditor = false;
-
-    public void OnEnable()
-    {
-        dbsource = (DatabaseSource)target;
-    }
-
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        //MAP DEFAULT INFORMATION
-        //dbsource.name = EditorGUILayout.TextField("Test", dbsource.name);
-        List<string> tables = dbsource.getTables();
-        string tableList = "List of Tables: ";
-        EditorGUILayout.Space();
-        EditorGUILayout.IntField("#Tables", tables.Count);
-        EditorGUILayout.Space();
-        foreach (string t in tables)
-        {
-            tableList += t + ",";
-        }
-        tableList.TrimEnd(',');
-        EditorGUILayout.LabelField(tableList);
-        //WIDTH - HEIGHT
-        //int width = EditorGUILayout.IntField("Map Sprite Width", comp.mapSprites.GetLength(0));
-        //int height = EditorGUILayout.IntField("Map Sprite Height", comp.mapSprites.GetLength(1));
-
-        /*if (width != comp.mapSprites.GetLength(0) || height != comp.mapSprites.GetLength(1))
-        {
-            comp.mapSprites = new Sprite[width, height];
-        }*/
-
-        /*showTileEditor = EditorGUILayout.Foldout(showTileEditor, "Tile Editor");
-
-        if (showTileEditor)
-        {
-            for (int h = 0; h < height; h++)
-            {
-                EditorGUILayout.BeginHorizontal();
-                for (int w = 0; w < width; w++)
-                {
-                    comp.mapSprites[w, h] = (Sprite)EditorGUILayout.ObjectField(comp.mapSprites[w, h], typeof(Sprite), false, GUILayout.Width(65f), GUILayout.Height(65f));
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-        }*/
-        if(GUILayout.Button("Load"))
-        {
-            dbsource.LoadData();
-        }
-        EditorUtility.SetDirty(dbsource);
-    }
-
-}
-
-
 [System.Serializable]
 public class DatabaseSource : ScriptableObject
 {
@@ -95,6 +34,8 @@ public class DatabaseSource : ScriptableObject
     public event DataChangedHandler dataChanged;
 
     private List<string> tableList;
+    [HideInInspector]
+    public string loadStatus = "unloaded";
 
     //Props
     public DatabaseSource()
@@ -110,12 +51,11 @@ public class DatabaseSource : ScriptableObject
 
     private void Awake()
     {
-
     }
 
     private void OnEnable()
     {
-
+        LoadData();
     }
 
     public void addSelectCallback(string tableName,Action<DataSource> action)
@@ -212,6 +152,7 @@ public class DatabaseSource : ScriptableObject
 
     protected void doOnDataReady()
     {
+        loadStatus = "loaded.";
         if (onDataReady != null)
         {
             onDataReady();

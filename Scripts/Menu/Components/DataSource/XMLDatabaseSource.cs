@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using System.Xml.Linq;
+using System;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/DatabaseSource/XMLDatabaseSource", order = 1)]
@@ -17,7 +18,7 @@ public class XMLDatabaseSource : DatabaseSource
         type = DataType.XML;
     }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public override void LoadData()
     {
         tables = new Dictionary<string, DataSource>();
@@ -34,18 +35,21 @@ public class XMLDatabaseSource : DatabaseSource
 #if !UNITY_WEBGL
             //XDocument doc = XDocument.Load(Application.streamingAssetsPath + "\\" + sourceName);
 #endif
+
+        try
+        {
             XDocument doc = XDocument.Parse(XML_file.text);
             bool firstElement = true;
             DataSource currentTable = null;
 
             foreach (XElement element in doc.Descendants())
             {
-                if(firstElement)//Root
+                if (firstElement)//Root
                 {
                     firstElement = false;
                     continue;
                 }
-                if(element.HasElements && element.Attributes().Count() <=1)//Table
+                if (element.HasElements && element.Attributes().Count() <= 1)//Table
                 {
                     DataSource table = new DataSource();
                     table.name = element.Name.ToString();
@@ -61,13 +65,13 @@ public class XMLDatabaseSource : DatabaseSource
                     }
                     table.setReady();
                 }
-                else if(element.Attributes().Count() > 1 && element.Parent.Name.ToString() == currentTable.name)//Entry
-                {                  
+                else if (element.Attributes().Count() > 1 && element.Parent.Name.ToString() == currentTable.name)//Entry
+                {
                     Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
                     currentTable.data.Add(list[primaryKey].ToString(), list);
                 }
-                else if(element.HasAttributes)
-                {       
+                else if (element.HasAttributes)
+                {
                     DataSource table = new DataSource();
                     table.name = element.Name.ToString();
                     //table.parentData = this;
@@ -86,11 +90,22 @@ public class XMLDatabaseSource : DatabaseSource
             if (tables.Count > 0)
             {
                 dataReady = true;
-                
+
             }
             doOnDataReady();
-        
+        }
+        catch(Exception e)
+        {
+            if(e.Message.Contains("dictionary"))
+            {
+                loadStatus = "key not found";
+            }
+            else
+            {
+                loadStatus = e.Message;
+            }
 
+        }
     }
 
 }

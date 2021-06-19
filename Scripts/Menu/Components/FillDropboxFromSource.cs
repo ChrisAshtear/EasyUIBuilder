@@ -14,7 +14,11 @@ public class FillDropboxFromSource : MonoBehaviour
 
     private Dropdown dropdown;
     public Text detailsPane;
+    [HideInInspector]
+    public DatabaseSource db;
+    [HideInInspector]
     public DataSource data;
+    [HideInInspector]
     public string chosenField;
     public bool showLabel = true;
     public string labelText = "";
