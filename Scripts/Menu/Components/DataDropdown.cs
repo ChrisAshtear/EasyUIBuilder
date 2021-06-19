@@ -5,14 +5,15 @@ using UnityEngine.UI;
 using System.Linq;
 using System.Reflection;
 using System;
+using TMPro;
+using UnityEngine.Events;
 /// <summary>
 /// This populates the contents of a dropbox with a number of elements in a data collection.
 /// </summary>
 
-public class FillDropboxFromSource : MonoBehaviour
+public class DataDropdown : TMP_Dropdown
 {
 
-    private Dropdown dropdown;
     public Text detailsPane;
     [HideInInspector]
     public DatabaseSource db;
@@ -20,10 +21,11 @@ public class FillDropboxFromSource : MonoBehaviour
     public DataSource data;
     [HideInInspector]
     public string chosenField;
+    public string chosenTable;
     public bool showLabel = true;
     public string labelText = "";
 
-    Text label;
+    TMP_Text label;
 
     public string comparisonVal;
 
@@ -33,24 +35,25 @@ public class FillDropboxFromSource : MonoBehaviour
     public listObjProps displayObj;
     // Start is called before the first frame update
     public List<string> optionKeys;
+
+    public UnityEvent<IDataLibrary> onSelectDataEvent;
     //SHOW # items. adjust how big viewport is.
     //Font to use. Maybe not for this particular script but in the prefab.
 
     public void populateButtons()
     {
-
-        dropdown = GetComponent<Dropdown>();
-        dropdown.ClearOptions();
+        ClearOptions();
         
         //need to pair id to value when selecting.
         Dictionary<string,string> opts= data.getFieldFromAllItemsKeyed(chosenField,true,true);
         //options.Add("");//add extra at bottom because dropdown hides it. 
         optionKeys = opts.Values.ToList();
-        dropdown.AddOptions(opts.Keys.ToList());
+        AddOptions(opts.Keys.ToList());
     }
 
     private void Start()
     {
+        base.Start();
         dataHandler = GetComponent<GenericDataHandler>();
         display = GetComponent<displayObjDetails>();
 
@@ -59,7 +62,7 @@ public class FillDropboxFromSource : MonoBehaviour
 
     public void initData()
     {
-        label = gameObject.transform.Find("Label").GetComponent<Text>();
+        label = captionText;
         label.enabled = showLabel;
 
         if (showLabel && labelText == "")
@@ -71,8 +74,9 @@ public class FillDropboxFromSource : MonoBehaviour
             label.text = labelText;
         }
 
-        if (data.isDataReady())
+        if (db.isDataReady())
         {
+            data = db.getTable(chosenTable);
             populateButtons();
         }
 
@@ -94,7 +98,7 @@ public class FillDropboxFromSource : MonoBehaviour
     {
         //should store all keys instead of doing a search like this
         Dictionary<string, string> opts = data.getFieldFromAllItemsKeyed(chosenField);
-        string chosenVal = dropdown.options[chosen].text;
+        string chosenVal = options[chosen].text;
         string key = opts[chosenVal];
         Debug.Log("Chose " + chosenVal + ": " + key);
 

@@ -45,7 +45,7 @@ public class DatabaseSource : ScriptableObject
 
     public void UI_SelectEntry(selectListItem e)
     {
-        selectItem(e.index,e.fill.data);
+        //selectItem(e.index,e.fill.data);
         Debug.Log(e.ToString());
     }
 
@@ -55,7 +55,15 @@ public class DatabaseSource : ScriptableObject
 
     private void OnEnable()
     {
-        LoadData();
+        //if(tables.Count ==0)
+        {
+            LoadData();
+        }
+    }
+
+    private void OnDisable()
+    {
+        dataReady = false;
     }
 
     public void addSelectCallback(string tableName,Action<DataSource> action)

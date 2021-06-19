@@ -5,23 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 #if UNITY_EDITOR
-[CustomEditor(typeof(FillDropboxFromSource), true)]
+
+[CustomEditor(typeof(DataDropdown), true)]
 public class DataDropDownEditor : Editor
 {
 
-    FillDropboxFromSource dropdown;
+    DataDropdown dropdown;
     DataSource table;
     string field="";
+    bool showAllProps = false;
+    UnityEvent<IDataLibrary> eventd;
     public void OnEnable()
     {
-        dropdown = (FillDropboxFromSource)target;
+        dropdown = (DataDropdown)target;
     }
 
     void OnTableSelected(object table)
     {
         this.table = (DataSource)table;
         dropdown.data = this.table;
+        dropdown.chosenTable = this.table.name.ToLower();
     }
 
     void OnFieldSelected(object field)
@@ -30,8 +35,18 @@ public class DataDropDownEditor : Editor
         dropdown.chosenField = this.field;
     }
 
+    public void RestoreTable()
+    {
+        if(dropdown.db != null && dropdown.chosenTable != "")
+        {
+            this.table = dropdown.data = dropdown.db.getTable(dropdown.chosenTable);
+            this.field = dropdown.chosenField;
+        }
+    }
+
     public override void OnInspectorGUI()
     {
+        RestoreTable();
         //detect when db or table changes and wipe list of fields/tables
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("DatabaseSource");
@@ -41,20 +56,24 @@ public class DataDropDownEditor : Editor
         EditorGUILayout.PrefixLabel("Table");
         //EditorGUILayout.DropdownButton("Button");
         string tableButtonLabel = "Select Table";
-        if (table != null) { tableButtonLabel = table.name; }
-        if (GUILayout.Button(tableButtonLabel))
+        if(dropdown.db != null)
         {
-            // create the menu and add items to it
-            GenericMenu menu = new GenericMenu();
-            List<DataSource> datas = dropdown.db.tables.Values.ToList();
-            foreach(DataSource d in datas)
+            if (table != null) { tableButtonLabel = table.name; }
+            if (GUILayout.Button(tableButtonLabel))
             {
-                menu.AddItem(new GUIContent(d.name), d.name == table?.name, OnTableSelected, d);
-            }
+                // create the menu and add items to it
+                GenericMenu menu = new GenericMenu();
+                List<DataSource> datas = dropdown.db.tables.Values.ToList();
+                foreach (DataSource d in datas)
+                {
+                    menu.AddItem(new GUIContent(d.name), d.name == table?.name, OnTableSelected, d);
+                }
 
-            // display the menu
-            menu.ShowAsContext();
+                // display the menu
+                menu.ShowAsContext();
+            }
         }
+        
         EditorGUILayout.EndHorizontal();
         
         EditorGUILayout.BeginHorizontal();
@@ -80,7 +99,19 @@ public class DataDropDownEditor : Editor
 
         EditorGUILayout.EndHorizontal();
 
-        DrawDefaultInspector();
+        showAllProps = EditorGUILayout.Toggle("Show Advanced", showAllProps);
+        if(showAllProps)
+        {
+            EditorGUILayout.LabelField("Dropdown Props:");
+            DrawDefaultInspector();
+        }
+        else
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("onSelectDataEvent"), new GUIContent("On Selection"));
+            EditorGUILayout.Space();
+        }
+        
 
         EditorUtility.SetDirty(dropdown);
     }

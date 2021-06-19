@@ -9,7 +9,7 @@ public enum DataType {  XML, SQL,JSON,Choice, Web, Realtime}; // we need custom 
 
 public enum fieldType { str, integer, flt };
 [System.Serializable]
-public class DataSource : ScriptableObject
+public class DataSource
 {
     //public string name;
     public string sourceName;
@@ -22,7 +22,7 @@ public class DataSource : ScriptableObject
 
     //protected List<Dictionary<string, string>> data;
     public Dictionary<string,Dictionary<string, object>> data; //(primaryKey,(obj[fieldname/fieldval])
-
+    public string name;
     public string primaryKey = "";
     [TextArea(3, 10)]
     public string displayCode = ""; // used for displaying an item with displayObj

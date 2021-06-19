@@ -40,6 +40,7 @@ public class DropDownProps
 
 
 #if UNITY_EDITOR
+/*
 [CustomPropertyDrawer(typeof(DropDownProps))]
 public class DropDownDrawer : PropertyDrawer
 {
@@ -97,7 +98,7 @@ public class DropDownDrawer : PropertyDrawer
         var nameRect = getRect(100, position);
         var acRect = getRect(100, position);
 
-        DataSource dataProp = (DataSource)property.FindPropertyRelative("data").objectReferenceValue;
+        DataSource dataProp = (DataSource)property.FindPropertyRelative("data").;
         if(dataProp != null && dataProp.name != currentData)
         {
             allFields = dataProp.getFieldSimple();
@@ -173,6 +174,7 @@ public class DropDownDrawer : PropertyDrawer
         return newR;
     }
 }
+*/
 #endif
 
 public class populateDropDowns : MonoBehaviour
@@ -222,8 +224,8 @@ public class populateDropDowns : MonoBehaviour
 
             obj.transform.Find("Label").GetComponent<Text>().text = b.label;
             //obj.transform.Find("ButtonCenter").GetComponent<Image>().color = b.color;
-            FillDropboxFromSource filldd;
-            filldd = dropdown.GetComponent<FillDropboxFromSource>();
+            DataDropdown filldd;
+            filldd = dropdown.GetComponent<DataDropdown>();
             switch (b.onSelect)
             {
                 case dropdownFunction.Form:
@@ -254,7 +256,7 @@ public class populateDropDowns : MonoBehaviour
 
             }
 
-            FillDropboxFromSource filldrop = obj.GetComponent<FillDropboxFromSource>();
+            DataDropdown filldrop = obj.GetComponent<DataDropdown>();
             filldrop.data = b.data;
             filldrop.chosenField = b.field;
             filldrop.labelText = b.label;

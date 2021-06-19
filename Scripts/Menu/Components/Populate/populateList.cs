@@ -122,7 +122,7 @@ public class OnSelectListEvent : UnityEvent<selectListItem>
 
 public class selectListItem
 {
-    public FillFromSource fill;//reference to selected obj
+    //public FillFromSource fill;//reference to selected obj
     public string index;//index of selected item
 }
 

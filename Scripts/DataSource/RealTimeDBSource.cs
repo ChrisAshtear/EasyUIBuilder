@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using System.Xml.Linq;
-
+/*
 [System.Serializable]
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/DatabaseSource/Real-Time DatabaseSource", order = 1)]
 public class RealTimeDBSource : DatabaseSource
@@ -81,3 +81,4 @@ public class RealTimeDBSource : DatabaseSource
 
 
 
+    */

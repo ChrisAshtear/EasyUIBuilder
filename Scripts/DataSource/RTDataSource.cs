@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using UnityEngine;
-
+/*
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/RealTimeDataSource", order = 1)]
 [System.Serializable]
 public class RTDataSource : DataSource
@@ -73,7 +73,7 @@ public class RTDataSource : DataSource
 
     public override string setFieldFromItemID(string id, string field, string value)
     {
-        if (dataReady/* && id > 0 && id < data.Count*/)
+        if (dataReady/* && id > 0 && id < data.Count*//*)
         {
             Dictionary<string, object> dict = data[id];
 
@@ -117,4 +117,4 @@ public class RTDataSource : DataSource
     private void OnEnable()
     {
     }
-}
+}*/
