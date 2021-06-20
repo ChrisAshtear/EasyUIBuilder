@@ -7,7 +7,7 @@ using Unity;
 using UnityEngine.Events;
 using UnityEditor;
 
-public enum dropdownFunction { showDetails, Form,CustomPlusDetails };
+public enum dropdownFunction { showDetails, Form,CustomPlusDetails,DataController };
 
 
 [System.Serializable]

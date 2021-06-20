@@ -49,7 +49,7 @@ public class XMLDatabaseSource : DatabaseSource
                     firstElement = false;
                     continue;
                 }
-                if (element.HasElements && element.Attributes().Count() <= 1)//Table
+                if (element.HasElements)//Table
                 {
                     DataSource table = new DataSource();
                     table.name = element.Name.ToString();
@@ -63,9 +63,13 @@ public class XMLDatabaseSource : DatabaseSource
                         displayCodes.Add(element.Name.ToString(), element.Attribute("displayCode").Value);
                         table.displayCode = element.Attribute("displayCode").Value;
                     }
+                    if (element.Attribute("spritesheet") != null)
+                    {
+                        //table.spritesheet = Resources.Load<Sprite>(element.Attribute("spritesheet").Value);
+                    }
                     table.setReady();
                 }
-                else if (element.Attributes().Count() > 1 && element.Parent.Name.ToString() == currentTable.name)//Entry
+                else if (element.Parent.Name.ToString() == currentTable.name)//Entry
                 {
                     Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
                     currentTable.data.Add(list[primaryKey].ToString(), list);
@@ -83,8 +87,7 @@ public class XMLDatabaseSource : DatabaseSource
                     currentTable.data.Add(table.name, list);
                     table.setReady();
                 }
-                //Dictionary<string, object> list = element.Attributes().ToDictionary(c => c.Name.LocalName, c => (object)c.Value);
-                //data.Add(list[primaryKey].ToString(), list);
+
                 Debug.Log(element);
             }
             if (tables.Count > 0)

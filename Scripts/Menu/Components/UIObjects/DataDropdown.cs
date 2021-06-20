@@ -37,6 +37,7 @@ public class DataDropdown : TMP_Dropdown
     public List<string> optionKeys;
 
     public UnityEvent<IDataLibrary> onSelectDataEvent;
+    public dropdownFunction type;
     //SHOW # items. adjust how big viewport is.
     //Font to use. Maybe not for this particular script but in the prefab.
 
@@ -56,7 +57,16 @@ public class DataDropdown : TMP_Dropdown
         base.Start();
         dataHandler = GetComponent<GenericDataHandler>();
         display = GetComponent<displayObjDetails>();
-
+        switch(type)
+        {
+            case dropdownFunction.showDetails:
+                onValueChanged.AddListener(delegate { displayValFields(value,true); });
+                break;
+            case dropdownFunction.DataController:
+                onValueChanged.AddListener(delegate { displayValFields(value); });
+                break;
+        }
+        
         initData();
     }
 
@@ -116,35 +126,25 @@ public class DataDropdown : TMP_Dropdown
 
     }
 
-    public void displayValFields(int chosen)
+    public void displayValFields(int chosen,bool dcode = false)
     {
-        GenericDataHandler datah = GetComponent<GenericDataHandler>();
-        listObjProps uiObject = displayObj;
+        if(dcode)
+        {
+            UIDisplayCodeController dc = displayObj.GetComponent<UIDisplayCodeController>();
+            dc.displayCode = data.displayCode;
+            listObjProps uiObject = displayObj;
+            uiObject.resetVals();
+        }
+        UIDataController ctrl = displayObj.GetComponent<UIDataController>();
+        
 
         string key = this.optionKeys[chosen];
 
-
         Dictionary<string, object> dat = data.getFieldsFromItemID(key);
 
-        uiObject.resetVals();
+        
+        ctrl.RefreshData(new DataLibrary(dat));
 
-
-        dataHandler.setData(data.getFieldsFromItemID(key));
-        display.uiObject = displayObj;
-        display.displayCode = data.displayCode;
-        display.parseFields();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void updateUI()
-    {
-        //getDataForUI.ins.dropdownSelected(this.name, dropdown.value.ToString());
     }
 
 }

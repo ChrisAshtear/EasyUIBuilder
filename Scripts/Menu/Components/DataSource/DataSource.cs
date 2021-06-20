@@ -38,6 +38,7 @@ public class DataSource
     public Action<DataSource> datChanged;
     public Dictionary<string,Action<string,object>> fieldChanged = new Dictionary<string, Action<string, object>>();
     public Action<DataSource> selectChanged;
+    public Sprite spritesheet;
 
     public DataSource()
     {

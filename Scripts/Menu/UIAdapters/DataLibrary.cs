@@ -64,26 +64,26 @@ public class DataLibrary : IDataLibrary,IDataLibraryReadOnly
         Values = new Dictionary<string, DataObject>();
         foreach (KeyValuePair<string, object> de in data)
         {
-            Values.Add(de.Key, new DataObject(de.Key, de.Value));
+            Values.Add(de.Key.ToLower(), new DataObject(de.Key, de.Value));
         }
         callbackList = new Dictionary<string, Action<DataObject>>();
     }
 
     public void AddListener(string valueName, Action<IData> callback)
     {
-        if (callbackList.ContainsKey(valueName))
+        if (callbackList.ContainsKey(valueName.ToLower()))
         {
-            callbackList[valueName] += callback;
+            callbackList[valueName.ToLower()] += callback;
         }
         else
         {
-            callbackList.Add(valueName, callback);
+            callbackList.Add(valueName.ToLower(), callback);
         }
     }
 
     public IData GetValue(string valueName)
     {
-        Values.TryGetValue(valueName, out DataObject val);
+        Values.TryGetValue(valueName.ToLower(), out DataObject val);
         return (IData)val ?? (IData)new DataObject("none",null);
     }
 
@@ -91,24 +91,24 @@ public class DataLibrary : IDataLibrary,IDataLibraryReadOnly
     {
         if (callbackList.ContainsKey(valueName))
         {
-            callbackList[valueName] -= callback;
+            callbackList[valueName.ToLower()] -= callback;
         }
     }
 
     public void SetValue(string valueName, object value,bool preserve=false)
     {
-        bool foundValue = Values.TryGetValue(valueName, out DataObject val);
+        bool foundValue = Values.TryGetValue(valueName.ToLower(), out DataObject val);
         if (!foundValue)
         {
             val = new DataObject(valueName, value,preserve);
-            Values.Add(valueName, val);
+            Values.Add(valueName.ToLower(), val);
         }
         else
         {
-            Values[valueName].Data = value;
-            Values[valueName].preserveData = preserve;
+            Values[valueName.ToLower()].Data = value;
+            Values[valueName.ToLower()].preserveData = preserve;
         }
-        if (callbackList.ContainsKey(valueName))
+        if (callbackList.ContainsKey(valueName.ToLower()))
         {
             callbackList[valueName]?.Invoke(val);
         }
@@ -116,6 +116,6 @@ public class DataLibrary : IDataLibrary,IDataLibraryReadOnly
 
     public string GetTxtValue(string valueName)
     {
-        return GetValue(valueName).DisplayValue;
+        return GetValue(valueName.ToLower()).DisplayValue;
     }
 }
