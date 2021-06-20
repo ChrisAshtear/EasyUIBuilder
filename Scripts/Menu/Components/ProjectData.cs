@@ -26,10 +26,6 @@ public class ProjectData : ScriptableObject
     public AudioClip menuMusic;
     //each map should have its own music property.
 
-    [Header("Game")]
-    public uint startingCash;
-    public uint startingCarID;
-    public uint startingWeaponID;
 
     public void PlaySound(string sound)
     {

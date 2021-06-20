@@ -297,18 +297,6 @@ public class populateList : MonoBehaviour, I_ItemMenu
                     selectedAnItem = true;
                 }
             }
-            SelectableItem select = obj.GetComponent<SelectableItem>();
-            if (select != null)
-            {
-                select.parentList = this;
-                switch (props.onSelect)
-                {
-                    case listFunction.CustomPlusDetails:
-                        select.e_pointerDown.AddListener(delegate {; });
-                        select.e_pointerDown.AddListener(delegate { props.evData.Invoke(dat); });
-                        break;
-                }
-            }
             
         }
 
