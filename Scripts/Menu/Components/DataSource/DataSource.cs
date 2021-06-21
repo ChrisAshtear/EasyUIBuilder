@@ -63,6 +63,7 @@ public class DataSource
 
     public void RemoveListener(string key, Action<string, object> callback)
     {
+        if (key == null) { return; }
         if (fieldChanged.ContainsKey(key))
         {
             fieldChanged[key] -= callback;

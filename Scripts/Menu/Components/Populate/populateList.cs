@@ -212,8 +212,9 @@ public class populateList : MonoBehaviour, I_ItemMenu
         }
     }
 
-    private void OnDisable()
+    private void OnValidate()
     {
+        Populate();
     }
 
     public void RefreshFilterByData(IDataLibrary data)
@@ -323,7 +324,24 @@ public class populateList : MonoBehaviour, I_ItemMenu
 
     public void Clear()
     {
-        GUIutil.clearChildren(layoutGroup.transform);
+        if(Application.isEditor)
+        {
+            foreach (Transform child in layoutGroup.transform)
+            {
+                GameObject obj = child.gameObject;
+                UnityEditor.EditorApplication.delayCall += () =>
+                {
+                    if(obj!=null)
+                    {
+                        UnityEditor.Undo.DestroyObjectImmediate(obj);
+                    }
+                };
+            }
+        }
+        else
+        {
+            GUIutil.clearChildren(layoutGroup.transform);
+        }
     }
 
     public void SetSelected(GameObject obj)

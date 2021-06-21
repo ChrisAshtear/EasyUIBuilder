@@ -78,7 +78,7 @@ class UIStatsReporter : MonoBehaviour
 
     public void Clear()
     {
-        ObjHelper.ClearChildren(transform);
+        GUIutil.clearChildren(transform);
 
     }
 

@@ -148,7 +148,8 @@ public class UIDisplayCodeController : UIDataController
     }
 
     public override void RefreshData(IDataLibrary data)
-    { 
+    {
+        if (uiObject == null) { return; }
         uiObject.resetVals();
         parseFields(data);
     }

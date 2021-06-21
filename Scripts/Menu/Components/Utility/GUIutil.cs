@@ -110,7 +110,7 @@ public static class GUIutil
         t.Enabled = true;
     }
 
-    public static void clearChildren(Transform t,string exception="none")
+    public static void clearChildren(Transform t,string exception="none",bool immediate=false)
     {
         List<GameObject> objs = new List<GameObject>();
         foreach (Transform child in t)
@@ -123,14 +123,14 @@ public static class GUIutil
         }
         foreach (GameObject c in objs)
         {
-            /*if (Application.isEditor)
+            if (immediate)
             {
                 Object.DestroyImmediate(c);
             }
             else
-            {*/
+            {
                 Object.Destroy(c);
-            //}
+            }
         }
     }
 

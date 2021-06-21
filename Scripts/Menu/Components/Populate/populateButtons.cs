@@ -348,6 +348,7 @@ public class populateButtons : MonoBehaviour
     }
     void Start()
     {
+        GUIutil.clearChildren(layoutGroup.transform, "none", true);
         bool selected = false;
         foreach(ButtonProps b in props)
         {
@@ -361,9 +362,33 @@ public class populateButtons : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnValidate()
     {
-        
+        foreach (Transform child in transform)
+        {
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                if(child!=null)
+                {
+                    UnityEditor.Undo.DestroyObjectImmediate(child.gameObject);
+                }
+            };
+        }
+        generateButtons();
+    }
+
+    void generateButtons()
+    {
+        bool selected = false;
+        foreach (ButtonProps b in props)
+        {
+            Button btn = createButton(b, prefab, true, layoutGroup);
+            if (!selected)
+            {
+                btn.Select();
+                selected = true;
+                btn.gameObject.AddComponent<UIselectOnEnable>();
+            }
+        }
     }
 }

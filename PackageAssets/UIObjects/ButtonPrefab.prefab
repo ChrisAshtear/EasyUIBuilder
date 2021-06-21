@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6226516285635520981}
   - component: {fileID: 6226516285635520983}
   - component: {fileID: 6226516285635520980}
-  - component: {fileID: 6371548943929519107}
+  - component: {fileID: 8742343904386730294}
   m_Layer: 5
   m_Name: ButtonPrefab
   m_TagString: Untagged
@@ -105,7 +105,7 @@ MonoBehaviour:
           m_StringArgument: CreditPanel
           m_BoolArgument: 1
         m_CallState: 2
---- !u!82 &6371548943929519107
+--- !u!82 &8742343904386730294
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,7 +114,7 @@ AudioSource:
   m_GameObject: {fileID: 6226516285635520970}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 9eaa55edb65be3040afb1da215ded30d, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
