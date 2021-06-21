@@ -1204,6 +1204,7 @@ MonoBehaviour:
     name: Skills
     primaryKey: UUID
     displayCode: 
+    spritesheet: {fileID: 0}
   chosenField: Name
   chosenTable: skills
   showLabel: 1
@@ -1220,3 +1221,4 @@ MonoBehaviour:
   onSelectDataEvent:
     m_PersistentCalls:
       m_Calls: []
+  type: 0

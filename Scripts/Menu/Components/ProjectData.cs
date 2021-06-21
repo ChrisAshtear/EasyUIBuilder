@@ -13,16 +13,17 @@ public class ProjectData : ScriptableObject
 {
     [Header("Project Data")]
     public string gameName = "CarDerby";
+    public string versionNum;
     //public MenuManager menu;
     [TextArea(6, 20)]
     public string credits = "";
     public GameObject defaultButton;
-    [Header("SFX")]
+    [Header("Sound")]
     public List<AudioClip> audioList;
     private Dictionary<string, AudioClip> audio;
+    public List<AudioMixer> audioMixers;
+    private Dictionary<string, AudioClip> mixers;
     public AudioSource player;
-
-    [Header("Music")]
     public AudioClip menuMusic;
     //each map should have its own music property.
 
