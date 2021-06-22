@@ -24,19 +24,16 @@ public class displayProjVal : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(projectHandler.loaded)
+        if(txt != null)
         {
-            if(txt != null)
-            {
-                txt.text = projectHandler.returnStr(var).ToString();
-            }
-            if(txtmesh != null)
-            {
-                txtmesh.text = projectHandler.returnStr(var).ToString();
-            }
-            
-            this.enabled = false;
+            txt.text = ProjectSettings.returnStr(var).ToString();
         }
+        if(txtmesh != null)
+        {
+            txtmesh.text = ProjectSettings.returnStr(var).ToString();
+        }
+            
+        this.enabled = false;
     }
 
 }

@@ -23,11 +23,30 @@ public class ProjectData : ScriptableObject
     private Dictionary<string, AudioClip> audio;
     public List<AudioMixer> audioMixers;
     private Dictionary<string, AudioClip> mixers;
+    [HideInInspector]
     public AudioSource player;
     public AudioClip menuMusic;
+    public string menuConfirm;
+    public string menuCancel;
+    public string gameStart;
+    [Header("Music")]
+    public AudioClip gameMusic;
+
+    [Header("Menus")]
+    public string showInMenu;
+    public string hideInMenu;
+    public string showInGame;
+    public string hideInGame;
     //each map should have its own music property.
 
-
+    private void OnValidate()
+    {
+        audio = new Dictionary<string, AudioClip>();
+        foreach(AudioClip a in audioList)
+        {
+            audio.Add(a.name, a);
+        }
+    }
     public void PlaySound(string sound)
     {
         audio.TryGetValue(sound, out AudioClip clip);

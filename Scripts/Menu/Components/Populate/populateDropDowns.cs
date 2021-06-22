@@ -192,8 +192,7 @@ public class populateDropDowns : MonoBehaviour
         props[0].label= "";
         props[0].color = Color.grey;
         layoutGroup = gameObject;
-        projectHandler.init();
-        prefab = projectHandler.pData.defaultButton;
+        prefab = ProjectSettings.data.defaultButton;
     }
     // Start is called before the first frame update
     void Start()
@@ -250,7 +249,7 @@ public class populateDropDowns : MonoBehaviour
 
                     /*if (b.AC == null)
                     {
-                        button.onClick.AddListener(() => MenuManager.ins.playSound(projectHandler.pData.menuConfirm));
+                        button.onClick.AddListener(() => MenuManager.ins.playSound(ProjectSettings.data.menuConfirm));
                     }*/
                     break;
 

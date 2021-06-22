@@ -17,7 +17,7 @@ public class ButtonProps
     public buttonFunction onPress = buttonFunction.startGame;
     public string argument;
     public Color32 color = Color.grey;
-    public AudioClip AC;
+    public string AC;
     public UnityEvent ev;
 }
 
@@ -254,8 +254,7 @@ public class populateButtons : MonoBehaviour
         props[0].name = "Button";
         props[0].color = Color.grey;
         layoutGroup = gameObject;
-        projectHandler.init();
-        prefab = projectHandler.pData.defaultButton;
+        prefab = ProjectSettings.data.defaultButton;
     }
     // Start is called before the first frame update
 
@@ -326,7 +325,7 @@ public class populateButtons : MonoBehaviour
                 button.onClick.AddListener(() => props.ev.Invoke());
                 if (props.AC == null)
                 {
-                    button.onClick.AddListener(() => MenuManager.ins.playSound(projectHandler.pData.menuConfirm));
+                    button.onClick.AddListener(() => ProjectSettings.data.PlaySound(ProjectSettings.data.menuConfirm));
                 }
                 break;
 
@@ -337,10 +336,9 @@ public class populateButtons : MonoBehaviour
 
         }
 
-        if (props.AC != null)
+        if (props.AC != "")
         {
-            obj.GetComponent<AudioSource>().clip = props.AC;
-            button.onClick.AddListener(() => obj.GetComponent<AudioSource>().Play());
+            button.onClick.AddListener(() => ProjectSettings.data.PlaySound(props.AC));
 
         }
 

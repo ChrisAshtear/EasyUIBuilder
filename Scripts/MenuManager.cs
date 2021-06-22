@@ -44,7 +44,7 @@ public class MenuManager : MonoBehaviour
 	public void quitGame()
 	{
         Invoke("exit", 1);
-        audio.PlayOneShot(projectHandler.pData.menuCancel);
+        ProjectSettings.data.PlaySound(ProjectSettings.data.menuCancel);
         panels.hidePanel(currentPanel, true);
     }
 
@@ -72,21 +72,21 @@ public class MenuManager : MonoBehaviour
         string[] showInGame = { "GamePanel" };
         string[] showInMenu = { "MenuBG"};
 
-        if (projectHandler.pData.showInMenu != "")
+        if (ProjectSettings.data.showInMenu != "")
         {
-            showInMenu = projectHandler.pData.showInMenu.Split(',');
+            showInMenu = ProjectSettings.data.showInMenu.Split(',');
         }
-        if (projectHandler.pData.hideInMenu != "")
+        if (ProjectSettings.data.hideInMenu != "")
         {
-            hideInMenu = projectHandler.pData.hideInMenu.Split(',');
+            hideInMenu = ProjectSettings.data.hideInMenu.Split(',');
         }
-        if (projectHandler.pData.showInGame != "")
+        if (ProjectSettings.data.showInGame != "")
         {
-            showInGame = projectHandler.pData.showInGame.Split(',');
+            showInGame = ProjectSettings.data.showInGame.Split(',');
         }
-        if (projectHandler.pData.hideInGame != "")
+        if (ProjectSettings.data.hideInGame != "")
         {
-            hideInGame = projectHandler.pData.hideInGame.Split(',');
+            hideInGame = ProjectSettings.data.hideInGame.Split(',');
         }
 
         switch (level)
@@ -116,15 +116,13 @@ public class MenuManager : MonoBehaviour
 
     }
 
-    public void changeMenu(string panel,AudioClip pressSound = null)
+    public void changeMenu(string panel,string pressSound = "")
     {
-        audio.Stop();
-        if(pressSound == null)
+        if(pressSound == "")
         {
-            pressSound = projectHandler.pData.menuConfirm;
+            pressSound = ProjectSettings.data.menuConfirm;
         }
-
-        audio.PlayOneShot(pressSound);
+        ProjectSettings.data.PlaySound(pressSound);
         prevPanel = currentPanel;
         
         panels.hidePanel(currentPanel,true);
@@ -152,7 +150,7 @@ public class MenuManager : MonoBehaviour
 
         if(targetPanel != null)
         {
-            changeMenu(targetPanel, projectHandler.pData.menuCancel);
+            changeMenu(targetPanel, ProjectSettings.data.menuCancel);
         }
         
     }
@@ -178,8 +176,6 @@ public class MenuManager : MonoBehaviour
 
         audio.outputAudioMixerGroup.audioMixer.SetFloat("volume", PlayerPrefs.GetFloat("sfxVol"));
         music.outputAudioMixerGroup.audioMixer.SetFloat("volume", PlayerPrefs.GetFloat("musicVol"));
-
-        projectHandler.ins.onDataReady += finishInit;
         
 
         //use an event to change music after pdata is loaded?
@@ -196,12 +192,13 @@ public class MenuManager : MonoBehaviour
         {
             pausePanelName = pausePanel.name;
         }
+        ProjectSettings.data.player = GetComponent<AudioSource>();
     }
 
 
     public void finishInit()
     {
-        //changeMusic(projectHandler.pData.menuMusic);
+        //changeMusic(ProjectSettings.data.menuMusic);
     }
 
     
@@ -219,7 +216,7 @@ public class MenuManager : MonoBehaviour
 
     public void processPrefs()
     {
-        playSound(projectHandler.pData.menuConfirm);
+        playSound(ProjectSettings.data.menuConfirm);
         setVolume();
     }
 
@@ -233,17 +230,7 @@ public class MenuManager : MonoBehaviour
 
     public static void playSound(string sfxName)
     {
-        ins.audio.Stop();
-        ins.audio.PlayOneShot(ins.getSound(sfxName));
-    }
-
-    public AudioClip getSound(string name)
-    {
-        AudioClip c;
-
-        sounds.TryGetValue(name, out c);
-
-        return c ?? projectHandler.pData.menuConfirm;
+        ProjectSettings.data.PlaySound(sfxName);
     }
 
     public static void statusMessage(string message,float time = 1)
@@ -271,7 +258,7 @@ public class MenuManager : MonoBehaviour
 
     public void startGame()
     {
-        audio.PlayOneShot(projectHandler.pData.gameStart);
+        ProjectSettings.data.PlaySound(ProjectSettings.data.gameStart);
         panels.hidePanel(currentPanel, true);
         Animator fader = panels.returnPanel("Fade").GetComponent<Animator>();
         fader.SetTrigger("fade");
@@ -303,7 +290,7 @@ public class MenuManager : MonoBehaviour
             OnLevelWasLoaded(1);
         }
         
-        changeMusic(projectHandler.pData.gameMusic);
+        changeMusic(ProjectSettings.data.gameMusic);
         MenuManager.gameRunning = true;
         GameManager.ins.gameStart();
     }
@@ -327,15 +314,14 @@ public class MenuManager : MonoBehaviour
             OnLevelWasLoaded(0);
         }
         
-        changeMusic(projectHandler.pData.menuMusic);
+        changeMusic(ProjectSettings.data.menuMusic);
         panels.showPanel("MenuPanel", true);
         currentPanel = "MenuPanel";
     }
 
     public void openWeb(string address)
     {
-        audio.Stop();
-        audio.PlayOneShot(projectHandler.pData.menuConfirm);
+        ProjectSettings.data.PlaySound(ProjectSettings.data.menuConfirm);
 #if !UNITY_WEBGL
         Application.OpenURL(address);
 #endif
@@ -349,7 +335,7 @@ public class MenuManager : MonoBehaviour
         UnPause();
         panels.hidePanel("GameOver", true);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        MenuManager.ins.changeMusic(projectHandler.pData.gameMusic);
+        MenuManager.ins.changeMusic(ProjectSettings.data.gameMusic);
         startGame();
     }
 
@@ -360,26 +346,6 @@ public class MenuManager : MonoBehaviour
         ins = instance;
         return instance;
     }
-
-
-    void Update()
-    {
-
-        //Check if the Cancel button in Input Manager is down this frame (default is Escape key) and that game is not paused, and that we're not in main menu
-        /*if (Input.GetButtonDown("Pause") && !GameManager.isPaused && MenuManager.gameRunning) // fix this
-        {
-            //Call the DoPause function to pause the game
-            DoPause(true);
-        }
-        //If the button is pressed and the game is paused and not in main menu
-        else if (Input.GetButtonDown("Pause") && GameManager.isPaused)
-        {
-            //Call the UnPause function to unpause the game
-            UnPause();
-        }
-        */
-    }
-
 
     public void DoPause(bool showPauseMenu = false)
     {
