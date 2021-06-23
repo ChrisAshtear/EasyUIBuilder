@@ -37,8 +37,6 @@ class UIStatBar : MonoBehaviour
     private void Start()
     {
         if (trackingObject != null) { InitBar(trackingObject); }
-        
-        //TODO:ammo tracking. should this be a special exception? Or a new script?
     }
 
     public void InitBar(GameObject trackingObject)
