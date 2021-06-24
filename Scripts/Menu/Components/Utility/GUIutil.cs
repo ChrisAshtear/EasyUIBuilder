@@ -55,6 +55,53 @@ public static class ObjectToDictionaryHelper
         throw new ArgumentNullException("source", "Unable to convert object to a dictionary. The source object is null.");
     }
 }
+
+public class EditorFieldProps
+{
+    public string label;
+    public SerializedProperty prop;
+    public string fieldName;
+}
+
+public class EditorRowProps
+{
+    public Rect pos;
+    public List<EditorFieldProps> props = new List<EditorFieldProps>();
+
+    public EditorRowProps(Rect pos)
+    {
+        props = new List<EditorFieldProps>();
+        this.pos = pos;
+    }
+
+    public void AddProp(SerializedProperty obj, string fieldName, string label)
+    {
+        props.Add(new EditorFieldProps { fieldName = fieldName, prop = obj, label = label });
+    }
+
+    public void Draw()
+    {
+        pos.x -= 100;
+        int width = (int)pos.width / props.Count;
+        foreach (EditorFieldProps p in props)
+        {
+            EditorPropField(ref pos, p, width);
+        }
+    }
+    //add all props, divide rect by amount of objects, then draw them.
+    public void EditorPropField(ref Rect pos, EditorFieldProps field,int width)
+    {
+        EditorGUI.PrefixLabel(pos, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(field.label));
+        pos.y += 16;
+        pos.height -= 16;
+        pos.width = width;
+        EditorGUI.PropertyField(pos, field.prop.FindPropertyRelative(field.fieldName), GUIContent.none);
+        pos.x += width;
+        pos.y -= 16;
+        pos.height += 16;
+    }
+}
+
 public static class GUIutil
 {
 
@@ -79,20 +126,6 @@ public static class GUIutil
         position.y += verticalSpacing;
         position.height -= verticalSpacing;
         return position;
-    }
-
-    public static void dropdownFromData(ref Rect position, DataSource source, string field)
-    {
-        /*
-
-        EditorGUI.BeginChangeCheck();
-        GUIutil.doPrefixLabel(ref unitRect, "Field");
-        _choiceIndex = EditorGUI.Popup(unitRect, userIndexProperty.intValue, allFields.ToArray());
-        if (EditorGUI.EndChangeCheck())
-        {
-            userIndexProperty.intValue = _choiceIndex;
-            fieldSelection.stringValue = allFields[_choiceIndex];
-        }*/
     }
 
     public static void SetTimer(Timer t, float delay, ElapsedEventHandler callbackFunc)

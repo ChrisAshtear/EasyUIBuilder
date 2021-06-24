@@ -17,6 +17,7 @@ public class ButtonProps
     public buttonFunction onPress = buttonFunction.startGame;
     public string argument;
     public Color32 color = Color.grey;
+    public Color32 txtcolor = Color.black;
     public string AC;
     public UnityEvent ev;
 }
@@ -61,6 +62,7 @@ public class populateButtons : MonoBehaviour
             {
                 TMPro.TextMeshProUGUI txtmesh = label.GetComponent<TMPro.TextMeshProUGUI>();
                 txtmesh.text = props.name;
+                txtmesh.color = props.txtcolor;
             }
             else
             {

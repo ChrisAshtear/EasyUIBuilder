@@ -149,31 +149,52 @@ public class ButtonDrawer : PropertyDrawer
         // prefab override logic works on the entire property.
         EditorGUI.BeginProperty(position, label, property);
 
-
         // Draw label
         position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-        // EditorGUIUtility.labelWidth = 14f;
-        // position.width /= 2f;
-        // Don't make child fields be indented
+
         var indent = EditorGUI.indentLevel;
         EditorGUI.indentLevel = 0;
 
         xOffset = position.x;
-        // Calculate rects
-        var amountRect = getRect(100, position);
-        var unitRect = getRect(100, position);
-        var colorRect = getRect(50, position);
-        var nameRect = getRect(200, position);
-        var acRect = getRect(100, position);
+        position.xMax += 100;
+        var fieldsRect = new Rect(position.x, position.y , position.width, yHeight);
 
-        // Draw fields - passs GUIContent.none to each so they are drawn without labels
+        EditorRowProps fields = new EditorRowProps(fieldsRect);
+        fields.AddProp(property, "name", "Button Name");
+        fields.AddProp(property, "color", "Button Color");
+        fields.AddProp(property, "txtcolor", "Label Color");
+        fields.AddProp(property, "onPress", "Button Type");
+
         SerializedProperty p = property.FindPropertyRelative("onPress");
+
+        if (p.intValue == 0 || p.intValue == 3 || p.intValue == 6)
+        {
+            string optName = "Option Field";
+            switch (p.intValue)
+            {
+                case 0:
+                    optName = "Panel Name";
+                    break;
+                case 3:
+                    optName = "Pref Name";
+                    break;
+                case 6:
+                    optName = "URL";
+                    break;
+            }
+            fields.AddProp(property, "argument", optName);
+        }
+
+        fields.AddProp(property, "AC", "Custom Sound");
+        
+        fields.Draw();
         if (p.intValue == 4)//custom prop
         {
+            EditorGUI.indentLevel = 0;
             var eventRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
             position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev"));
 
-
+            eventRect.x -= 100;
             var labelRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
             EditorGUI.PrefixLabel(labelRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("OnPress : "));
 
@@ -181,38 +202,6 @@ public class ButtonDrawer : PropertyDrawer
             EditorGUI.PropertyField(eventRect, property.FindPropertyRelative("ev"), GUIContent.none);
 
         }
-        else if (p.intValue == 0 || p.intValue == 3 || p.intValue == 6)
-        {
-            EditorGUI.PrefixLabel(nameRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Option Field"));
-            nameRect.y += 16;
-            nameRect.height -= 16;
-            EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("argument"), GUIContent.none);
-        }
-
-        EditorGUI.PrefixLabel(acRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Custom Sound"));
-        acRect.y += 16;
-        acRect.height -= 16;
-        EditorGUI.PropertyField(acRect, property.FindPropertyRelative("AC"), GUIContent.none);
-
-
-        EditorGUI.PrefixLabel(amountRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Button Name"));
-        amountRect.y += 16;
-        amountRect.height -= 16;
-        EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("name"), GUIContent.none);
-
-        EditorGUI.PrefixLabel(colorRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Color"));
-        colorRect.y += 16;
-        colorRect.height -= 16;
-        EditorGUI.PropertyField(colorRect, property.FindPropertyRelative("color"), GUIContent.none);
-        EditorGUI.PrefixLabel(unitRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Button Type"));
-        unitRect.y += 16;
-        unitRect.height -= 16;
-        EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("onPress"), GUIContent.none);
-
-
-        // Set indent back to what it was
-        EditorGUI.indentLevel = indent;
-
         EditorGUI.EndProperty();
     }
 
