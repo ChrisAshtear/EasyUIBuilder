@@ -8,24 +8,25 @@ class UIStatBarsFromData : MonoBehaviour
 {
     public GameObject statBarPrefab;
     [Tooltip("Display these stats- use comma to seperate multiple stats(ie-cash,armor)")]
-    private string statsToUse;
+    public string statsToUse;
+    public string statLabelList;
     public string keyName = "DefinitionID";
     private string oldKey = "";
-    public DataSource source;//TODO:get rid of this reference
+    public SourceProps source;
+
     //might need to pass data source too
-
-    /*
-
     public void RefreshData(IDataLibrary data)
     {
         bool sameKey = (oldKey == data.GetValue(keyName).ToString());
         if (data == null || sameKey) { return; }
         oldKey = data.GetValue(keyName).ToString();
         Clear();
-        ItemTypeInfo info = ItemDatabase.GetItemInfoForUI(data.GetValue("itemType").ToString());
-        statsToUse = info.statBarFields;
-        string[] statLabels = info.statBarLabels.Split(',');
+        //ItemTypeInfo info = ItemDatabase.GetItemInfoForUI(data.GetValue("itemType").ToString());
+        string[] statLabels = statLabelList.Split(',');
         string[] statList = statsToUse.Split(',');
+
+        DataSource ds = source.db.getTable(source.tableName);
+        if (ds == null) { return; }
 
         for(int i = 0; i<statLabels.Length;i++)
         {
@@ -35,7 +36,7 @@ class UIStatBarsFromData : MonoBehaviour
             bar.fieldName = statLabels[i];
             bar.name = statLabels[i];
             Stat virtualStat = new Stat(d.Name, Convert.ToSingle(d.Data));
-            virtualStat.MaxValue = source.GetMaxValueFromField(statList[i]);
+            virtualStat.MaxValue = ds.GetMaxValueFromField(statList[i]);
             bar.trackingObject = null;
             bar.enabled = true;
             bar.UpdateData(virtualStat);//initialization
@@ -44,9 +45,7 @@ class UIStatBarsFromData : MonoBehaviour
 
     public void Clear()
     {
-        ObjHelper.ClearChildren(transform);
-
+        GUIutil.clearChildren(transform);
     }
-    */
 }
 

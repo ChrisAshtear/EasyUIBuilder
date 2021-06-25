@@ -47,63 +47,36 @@ public class ListDrawer : PropertyDrawer
 
         // Draw label
         position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-        // EditorGUIUtility.labelWidth = 14f;
-        // position.width /= 2f;
-        // Don't make child fields be indented
+
         var indent = EditorGUI.indentLevel;
         EditorGUI.indentLevel = 0;
-
-        xOffset = position.x;
         // Calculate rects
-        var labelRect = getRect(150, position);
-        var amountRect = getRect(100, position);
-        var unitRect = getRect(100, position);
-        var colorRect = getRect(100, position);
-        var nameRect = getRect(100, position);
-        var acRect = getRect(100, position);
-
-        //DataSource dataProp = (DataSource)property.FindPropertyRelative("data").objectReferenceValue;
-
-        SerializedProperty userIndexProperty = property.FindPropertyRelative("fieldIdx");
-        SerializedProperty tableIndexProperty = property.FindPropertyRelative("tableIdx");
-
-        SerializedProperty table = property.FindPropertyRelative("tableName");
-
-        //GUIutil.doPrefixLabel(ref labelRect, "Source");
-        labelRect.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("dataS"));
-        EditorGUI.PropertyField(labelRect, property.FindPropertyRelative("dataS"), GUIContent.none);
-
-        //when changing fields, field is first set to null.
-        //keep a list of choices, when field is null, reset choices. if list is null, get choices.
+        xOffset = position.x;
+        position.xMax += 100;
+        var fieldsRect = new Rect(position.x, position.y, position.width, yHeight);
         SerializedProperty p = property.FindPropertyRelative("onSelect");
-
-        if (p.intValue == 2 || p.intValue == 3)//custom prop
-        {
-            string evName = "evData";
-            var eventRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
-            position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative(evName));
-
-            var lblRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
-            EditorGUI.PrefixLabel(lblRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("OnPress : "));
-
-            eventRect.y += 16;
-            EditorGUI.PropertyField(eventRect, property.FindPropertyRelative(evName), GUIContent.none);
-
-        }
-
-
-
+        EditorRowProps fields = new EditorRowProps(fieldsRect);
+        fields.AddProp(property, "dataS");
+        fields.AddProp(property, "onSelect", "Dropdown Type");
         if (p.intValue == 0 || p.intValue == 2)
         {
-            GUIutil.doPrefixLabel(ref nameRect, "Display Object");
-            EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("displayObj"), GUIContent.none);
+            fields.AddProp(property, "displayObj", "Display Object");
         }
+        fields.Draw();
+        if (p.intValue == 2 || p.intValue == 3)//custom prop
+        {
+            EditorGUI.indentLevel = 0;
+            var eventRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
+            position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("evData"));
 
+            eventRect.x -= 100;
+            var labelRect = new Rect(position.x - 100, position.y + yHeight, position.width, position.height - yHeight);
+            EditorGUI.PrefixLabel(labelRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("OnPress : "));
 
-        GUIutil.doPrefixLabel(ref colorRect, "DropDown Type");
-        EditorGUI.PropertyField(colorRect, property.FindPropertyRelative("onSelect"), GUIContent.none);
+            eventRect.y += 16;
+            EditorGUI.PropertyField(eventRect, property.FindPropertyRelative("evData"), GUIContent.none);
 
-
+        }
 
         // Set indent back to what it was
         EditorGUI.indentLevel = indent;
@@ -111,12 +84,6 @@ public class ListDrawer : PropertyDrawer
         EditorGUI.EndProperty();
     }
 
-    public Rect getRect(int size, Rect position)
-    {
-        Rect newR = new Rect(xOffset, position.y, size, yHeight);
-        xOffset += size;
-        return newR;
-    }
 }
 
 #endif

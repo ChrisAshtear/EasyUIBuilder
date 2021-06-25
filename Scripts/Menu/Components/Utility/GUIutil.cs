@@ -74,7 +74,7 @@ public class EditorRowProps
         this.pos = pos;
     }
 
-    public void AddProp(SerializedProperty obj, string fieldName, string label)
+    public void AddProp(SerializedProperty obj, string fieldName, string label="none")
     {
         props.Add(new EditorFieldProps { fieldName = fieldName, prop = obj, label = label });
     }
@@ -88,18 +88,32 @@ public class EditorRowProps
             EditorPropField(ref pos, p, width);
         }
     }
-    //add all props, divide rect by amount of objects, then draw them.
+
     public void EditorPropField(ref Rect pos, EditorFieldProps field,int width)
     {
-        EditorGUI.PrefixLabel(pos, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(field.label));
-        pos.y += 16;
-        pos.height -= 16;
+        //none check is to allow for a passthrough of an object that has its own ongui call where it draws its own fields.
+        if(field.label != "none")
+        {
+            EditorGUI.PrefixLabel(pos, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(field.label));
+            pos.y += 16;
+            pos.height -= 16;
+        }
+        
         pos.width = width;
         EditorGUI.PropertyField(pos, field.prop.FindPropertyRelative(field.fieldName), GUIContent.none);
         pos.x += width;
-        pos.y -= 16;
-        pos.height += 16;
+        if (field.label != "none")
+        {
+            pos.y -= 16;
+            pos.height += 16;
+        }
     }
+
+    public void EditorPopupMenu(ref Rect pos, EditorFieldProps field, int width)
+    {
+        
+    }
+
 }
 
 public static class GUIutil

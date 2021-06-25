@@ -195,7 +195,7 @@ public class ButtonDrawer : PropertyDrawer
             position.height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("ev"));
 
             eventRect.x -= 100;
-            var labelRect = new Rect(position.x, position.y + yHeight, position.width, position.height - yHeight);
+            var labelRect = new Rect(position.x-100, position.y + yHeight, position.width, position.height - yHeight);
             EditorGUI.PrefixLabel(labelRect, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("OnPress : "));
 
             eventRect.y += 16;

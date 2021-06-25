@@ -1,28 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UIEquipmentCheck : MonoBehaviour
+public class UICheck : MonoBehaviour
 {
-   // public PlayersCarDisplay car;
     public UIDialogBox dialogObj;
     public DialogProps dialogProps;
     public int successIndex;
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    public bool showDialog = false;
 
     public void DoCheck()
     {
-      //  EquipmentController controller = car.SpawnedCar.GetComponent<EquipmentController>();
-        if(false)
+        if(showDialog)
         {
             dialogObj.ShowDialog(dialogProps);
         }
