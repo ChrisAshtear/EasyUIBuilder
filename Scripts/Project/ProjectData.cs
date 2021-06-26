@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
 using System.Collections.Generic;
+using System.Linq;
 [System.Serializable]
 
 
@@ -44,9 +45,16 @@ public class ProjectData : ScriptableObject
         audio = new Dictionary<string, AudioClip>();
         foreach(AudioClip a in audioList)
         {
+            if (a == null || audio.ContainsKey(a.name)){ continue; }
             audio.Add(a.name, a);
         }
     }
+
+    private void OnEnable()
+    {
+        ProjectSettings.data = this;
+    }
+
     public void PlaySound(string sound)
     {
         audio.TryGetValue(sound, out AudioClip clip);
@@ -54,5 +62,15 @@ public class ProjectData : ScriptableObject
         {
             player.PlayOneShot(clip);
         }
+    }
+
+    public void PlaySound(ProjectSoundClip clip)
+    {
+        PlaySound(clip.audioName);
+    }
+    
+    public string[] GetSoundList()
+    {
+        return audio.Keys.ToArray();
     }
 }

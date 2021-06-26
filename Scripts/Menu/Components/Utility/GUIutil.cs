@@ -63,6 +63,12 @@ public class EditorFieldProps
     public string fieldName;
 }
 
+public class EditorPopupProps: EditorFieldProps
+{
+    public int index;
+    public string[] choices;
+}
+
 public class EditorRowProps
 {
     public Rect pos;
@@ -77,6 +83,11 @@ public class EditorRowProps
     public void AddProp(SerializedProperty obj, string fieldName, string label="none")
     {
         props.Add(new EditorFieldProps { fieldName = fieldName, prop = obj, label = label });
+    }
+
+    public void AddMenu(SerializedProperty obj, string fieldName, string[] choices, int curIdx, string label = "none")
+    {
+        props.Add(new EditorPopupProps { fieldName = fieldName, prop = obj, label = label, choices = choices, index = curIdx });
     }
 
     public void Draw()
@@ -109,9 +120,22 @@ public class EditorRowProps
         }
     }
 
-    public void EditorPopupMenu(ref Rect pos, EditorFieldProps field, int width)
+    public void EditorPopupMenu(ref Rect pos, EditorPopupProps field, int width)
     {
-        
+        field.index = EditorGUI.Popup(pos, field.index, field.choices);
+        if (field.index >= field.choices.Length)
+        {
+            field.index = 0;
+        }
+
+        //field.prop.FindPropertyRelative(field.fieldName).objectReferenceValue
+        /*if (obj != null)
+        {
+            string[] tables = obj.getTables().ToArray();
+            
+            property.FindPropertyRelative("tableName").stringValue = tables[index];
+            property.FindPropertyRelative("ID").stringValue = obj.primaryKey;
+        }*/
     }
 
 }

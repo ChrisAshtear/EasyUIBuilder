@@ -18,7 +18,7 @@ public class ButtonProps
     public string argument;
     public Color32 color = Color.grey;
     public Color32 txtcolor = Color.black;
-    public string AC;
+    public ProjectSoundClip AC;
     public UnityEvent ev;
 }
 
@@ -80,7 +80,8 @@ public class populateButtons : MonoBehaviour
         switch (props.onPress)
         {
             case buttonFunction.changeMenu:
-                button.onClick.AddListener(() => MenuManager.ins.changeMenu(props.argument, props.AC));
+                button.onClick.AddListener(() => MenuManager.ins.changeMenu(props.argument));
+                button.onClick.AddListener(() => ProjectSettings.data.PlaySound(props.AC.audioName));
                 break;
 
             case buttonFunction.GoBack:
@@ -119,10 +120,9 @@ public class populateButtons : MonoBehaviour
 
         }
 
-        if (props.AC != "")
+        if (props.AC.audioName != "")
         {
-            button.onClick.AddListener(() => ProjectSettings.data.PlaySound(props.AC));
-
+            button.onClick.AddListener(() => ProjectSettings.data.PlaySound(props.AC.audioName));
         }
 
         return button;
