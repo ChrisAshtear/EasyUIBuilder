@@ -103,15 +103,17 @@ public class EditorRowProps
     public void EditorPropField(ref Rect pos, EditorFieldProps field,int width)
     {
         //none check is to allow for a passthrough of an object that has its own ongui call where it draws its own fields.
-        if(field.label != "none")
+        pos.width = width;
+        if (field.label != "none")
         {
             EditorGUI.PrefixLabel(pos, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(field.label));
             pos.y += 16;
             pos.height -= 16;
         }
-        
-        pos.width = width;
-        EditorGUI.PropertyField(pos, field.prop.FindPropertyRelative(field.fieldName), GUIContent.none);
+        SerializedProperty prop = field.prop.FindPropertyRelative(field.fieldName);
+        if (prop == null) { return; }
+
+        EditorGUI.PropertyField(pos, prop, GUIContent.none);
         pos.x += width;
         if (field.label != "none")
         {

@@ -130,17 +130,7 @@ public class populateButtons : MonoBehaviour
     void Start()
     {
         GUIutil.clearChildren(layoutGroup.transform, "none", true);
-        bool selected = false;
-        foreach(ButtonProps b in props)
-        {
-            Button btn = createButton(b, prefab, true, layoutGroup);
-            if (!selected)
-            {
-                btn.Select();
-                selected = true;
-                btn.gameObject.AddComponent<UIselectOnEnable>();
-            }
-        }
+        generateButtons();
     }
 
     private void OnValidate()

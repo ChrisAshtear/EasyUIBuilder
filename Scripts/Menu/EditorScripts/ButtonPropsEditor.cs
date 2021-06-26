@@ -164,7 +164,7 @@ public class ButtonDrawer : PropertyDrawer
         fields.AddProp(property, "color", "Button Color");
         fields.AddProp(property, "txtcolor", "Label Color");
         fields.AddProp(property, "onPress", "Button Type");
-
+        fields.AddProp(property, "AC", "Custom Sound");
         SerializedProperty p = property.FindPropertyRelative("onPress");
 
         if (p.intValue == 0 || p.intValue == 3 || p.intValue == 6)
@@ -184,8 +184,9 @@ public class ButtonDrawer : PropertyDrawer
             }
             fields.AddProp(property, "argument", optName);
         }
+        else { fields.AddProp(property, "none"); }
 
-        fields.AddProp(property, "AC", "Custom Sound");
+        
         
         fields.Draw();
         if (p.intValue == 4)//custom prop
@@ -205,11 +206,5 @@ public class ButtonDrawer : PropertyDrawer
         EditorGUI.EndProperty();
     }
 
-    public Rect getRect(int size, Rect position)
-    {
-        Rect newR = new Rect(xOffset, position.y, size, yHeight);
-        xOffset += size;
-        return newR;
-    }
 }
 #endif

@@ -60,7 +60,7 @@ public class ProjectData : ScriptableObject
         audio.TryGetValue(sound, out AudioClip clip);
         if(clip!=null)
         {
-            player.PlayOneShot(clip);
+            player?.PlayOneShot(clip);
         }
     }
 

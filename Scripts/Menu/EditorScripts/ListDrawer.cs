@@ -62,6 +62,7 @@ public class ListDrawer : PropertyDrawer
         {
             fields.AddProp(property, "displayObj", "Display Object");
         }
+        else { fields.AddProp(property, "none"); }
         fields.Draw();
         if (p.intValue == 2 || p.intValue == 3)//custom prop
         {
