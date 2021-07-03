@@ -45,6 +45,13 @@ public class DataSource
         //condition = maxCond;
     }
 
+    public DataSource(string name,string key)
+    {
+        primaryKey = key;
+        this.name = name;
+        data = new Dictionary<string, Dictionary<string, object>>();
+    }
+
     private void OnDestroy()
     {
     }

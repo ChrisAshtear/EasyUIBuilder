@@ -11,7 +11,6 @@ public class DatabaseSourceEditor : Editor
 {
 
     DatabaseSource dbsource;
-    static bool showTileEditor = false;
 
     public void OnEnable()
     {
@@ -29,10 +28,14 @@ public class DatabaseSourceEditor : Editor
         EditorGUILayout.LabelField("#Tables", numTables.ToString());
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Status: ",dbsource.loadStatus);
-        foreach (string t in tables)
+        if(tables!=null)
         {
-            tableList += t + ",";
+            foreach (string t in tables)
+            {
+                tableList += t + ",";
+            }
         }
+        
         tableList = tableList.TrimEnd(',');
         EditorGUILayout.LabelField("Tables:" ,tableList);
 

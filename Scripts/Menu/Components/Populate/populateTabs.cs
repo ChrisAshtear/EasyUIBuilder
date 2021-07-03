@@ -61,6 +61,7 @@ public class populateTabs : MonoBehaviour
 
         Toggle tog = obj.GetComponent<Toggle>();
         tog.group = group;
+        tog.isOn = false;
         //maybe use datalib + datacontroller to auto fill this in the prefab
         Transform label = obj.transform.Find("Label");
         if (label != null)
@@ -95,7 +96,7 @@ public class populateTabs : MonoBehaviour
 
         }
         */
-        //tog.onValueChanged.AddListener(delegate { tabPanel.; });
+
         tog.onValueChanged.AddListener(delegate { tabPanel.SetActive(tog.isOn); });
         //add 2nd event for animation
         if (props.AC.audioName != "")
@@ -141,19 +142,14 @@ public class populateTabs : MonoBehaviour
     void generateContent()
     {
         if(contentContainer == null || tabContainer == null || tabButtonPrefab == null) { return; }
-        bool selected = false;
+
         foreach (TabProps b in tProps)
         {
             if(b.panelPrefab == null) { continue; }
             GameObject tabPanel = createTabPanel(b, contentContainer.gameObject);
             if (!b.startSelected) { tabPanel.SetActive(false); }
             Toggle tog = createTabButton(b, tabButtonPrefab, tabContainer, tabPanel, contentContainer);
-            if (!selected)
-            {
-                tog.Select();
-                selected = true;
-                tog.gameObject.AddComponent<UIselectOnEnable>();
-            }
+            if (b.startSelected) { tog.isOn = true; }
         }
     }
 }

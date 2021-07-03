@@ -40,7 +40,7 @@ public class DatabaseSource : ScriptableObject
     //Props
     public DatabaseSource()
     {
-
+        tables = new Dictionary<string, DataSource>();
     }
 
     public void UI_SelectEntry(selectListItem e)
