@@ -44,10 +44,15 @@ public class UIButtonListItem : MonoBehaviour
 
     public void SetData(IDataLibrary data)
     {
+        PreDataUpdate(data);
         UIDataController control = GetComponent<UIDataController>();
         dataKey = data.GetValue("DefinitionID").ToString();
         storedData = data;
         control.RefreshData(data);
+    }
+
+    public virtual void PreDataUpdate(IDataLibrary data)
+    {
     }
 
     public IDataLibrary GetData()

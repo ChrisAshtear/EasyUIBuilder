@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+public enum DataLibSupportedTypes { text, number, sprite };
 
 public class DataObject : IData
 {
@@ -11,30 +14,39 @@ public class DataObject : IData
     object dataObj;
     string name;
     public bool preserveData = false;
+    DataLibSupportedTypes type;
 
     public string Name { get { return name; } set { this.name = value; } }
     public object Data { get { return dataObj; } set { this.dataObj = value; } }
     public string DisplayValue { get { return dataObj?.ToString() ?? ""; } }
+    public DataLibSupportedTypes Type { get { return type; } }
 
     public DataObject(string name, object obj,bool preserve=false)
     {
         this.name = name;
         this.dataObj = obj;
         this.preserveData = preserve;
+        this.type = DataLibSupportedTypes.text;
     }
 
     public override string ToString() { return DisplayValue; }
 
 }
 
-public class DataLibrary : IDataLibrary,IDataLibraryReadOnly
+public class DataLibrary : IDataLibrary,IDataLibraryReadOnly, IEnumerator<IData>,IEnumerable
 {
+    private int position = -1;
+
     Dictionary<string, DataObject> Values;
     Dictionary<string, Action<DataObject>> callbackList;
     public Action<Dictionary<string, IData>> OnValueChanged { get; set; }
     public string LibraryName { get { return libName; } set { libName = value; } }
 
     public bool IsPopulated { get { return Values.Count > 0; } }
+
+    public IData Current { get { return (IData)Values.Values.GetEnumerator().Current; } }
+
+    object IEnumerator.Current { get { return Values.Values.GetEnumerator().Current; } }
 
     private string libName = "Null";
 
@@ -117,5 +129,25 @@ public class DataLibrary : IDataLibrary,IDataLibraryReadOnly
     public string GetTxtValue(string valueName)
     {
         return GetValue(valueName.ToLower()).DisplayValue;
+    }
+
+    public bool MoveNext()
+    {
+        return Values.Values.GetEnumerator().MoveNext();
+    }
+
+    public void Reset()
+    {
+        Values.Values.GetEnumerator().MoveNext();//??
+    }
+
+    public void Dispose()
+    {
+        Values.Values.GetEnumerator().Dispose();
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return Values.Values.GetEnumerator();
     }
 }

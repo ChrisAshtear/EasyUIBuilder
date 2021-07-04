@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -10,64 +12,28 @@ using System.Linq;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-
-public interface I_ItemMenu
-{
-    void SetSelected(GameObject obj);
-    GameObject GetSelected();
-}
-
-[System.Serializable]
-public class OnSelectListEvent : UnityEvent<selectListItem>
-{
-}
-
-
-public class selectListItem
-{
-    //public FillFromSource fill;//reference to selected obj
-    public string index;//index of selected item
-}
-
-public class DataProps : BaseProps
-{
-    public UnityEvent ev;
-    public UnityEvent<IDataLibrary> evData;
-
-    public string tableName;
-    [HideInInspector]
-    public DataSource data { get { return dataS.db.getTable(dataS.tableName); } }
-    public SourceProps dataS;
-    public string field;
-    public int fieldIdx;
-    public int tableIdx;
-}
-
-// Custom serializable class
 [Serializable]
-public class ListProps : DataProps
+public class TableProps : DataProps
 {
-    public listFunction onSelect = listFunction.Form;
+    public listFunction onSelect = listFunction.Form;//TODO: convert this to just an intcode that is populated by some script? so it can be used by popTable/popList
     public listObjProps displayObj;
-}
-[System.Serializable]
-public class SourceProps
-{
-    public DatabaseSource db;
-    public string tableName;
-    public string ID;
+
+    [Tooltip("Alternate color for odd and even rows")]
+    public bool striping = true;
+    public bool sortable = true;
+    public bool showHeader = true;
 }
 
-public class populateList : populateData, I_ItemMenu
+public class populateTable : populateData, I_ItemMenu
 {
 
-    public new ListProps props;
+    public new TableProps props;
 
-    private Dictionary<string,object> preservedData = new Dictionary<string, object>();
+    private Dictionary<string, object> preservedData = new Dictionary<string, object>();
 
     public override void Populate()
     {
-        
+
         bool selected = false;
 
         Clear();
@@ -87,20 +53,24 @@ public class populateList : populateData, I_ItemMenu
         {
             displayCode = d.displayCode;
         }
-        UIDisplayCodeController dc = props.displayObj.GetComponent<UIDisplayCodeController>();
-        if (dc != null)
+        if(props.displayObj!=null)
         {
-            dc.displayCode = displayCode;
+            UIDisplayCodeController dc = props.displayObj.GetComponent<UIDisplayCodeController>();
+            if (dc != null)
+            {
+                dc.displayCode = displayCode;
+            }
         }
+        
 
         foreach (string key in keys)
         {
             bool filtered = false;
             foreach (SourceFilter filter in allFilters)
             {
-                if(key == "0" && showEmptyItem){ continue; }
+                if (key == "0" && showEmptyItem) { continue; }
                 string value = d.getFieldFromItemID(key, filter.filterVar);
-                if(!filter.MatchesFilter(value))
+                if (!filter.MatchesFilter(value))
                 {
                     filtered = true;
                 }
@@ -110,7 +80,7 @@ public class populateList : populateData, I_ItemMenu
             GameObject obj = Instantiate(prefab, layoutGroup.transform);
             obj.transform.parent = layoutGroup.transform;
             obj.name = key;
-            UIButtonListItem listItem = obj.GetComponent<UIButtonListItem>();
+            UIRowListItem listItem = obj.GetComponent<UIRowListItem>();
             d.AddListener(key, listItem.SourceUpdate);
             DataLibrary dat = new DataLibrary(props.data.getObjFromItemID(key));
             foreach (KeyValuePair<string, object> de in preservedData)
@@ -120,15 +90,15 @@ public class populateList : populateData, I_ItemMenu
             listItem.SetData(dat);
             listItem.Click = OnClick;
             listItem.source = props.data;
-            if(!selectedAnItem)
+            if (!selectedAnItem)
             {
-                if(selectDefaultItem &&(  defaultSelection == -1 || key == defaultSelection.ToString()))
+                if (selectDefaultItem && (defaultSelection == -1 || key == defaultSelection.ToString()))
                 {
                     listItem.Click?.Invoke(listItem);
                     selectedAnItem = true;
                 }
             }
-            
+
         }
 
     }

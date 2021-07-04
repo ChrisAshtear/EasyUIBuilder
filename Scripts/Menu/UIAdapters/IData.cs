@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ public interface IDataLibrary
 
     void AddListener(string valueName, Action<IData> callback);
     void RemoveListener(string valueName, Action<IData> callback);
+
+    public IEnumerator GetEnumerator();
 
     string LibraryName{ get; set; }
     Action<Dictionary<string, IData>> OnValueChanged { get; set; }
@@ -30,4 +33,6 @@ public interface IData
     object Data { get; set; }
     string DisplayValue { get; }
     string Name { get; }
+
+    DataLibSupportedTypes Type { get; }
 }
