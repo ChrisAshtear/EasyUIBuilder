@@ -44,6 +44,7 @@ public class populateTable : populateData, I_ItemMenu
             primaryKey = props?.data?.primaryKey;
             d = props?.data;
         }
+        if (d == null) { return; }
         bool selectedAnItem = false;
         List<string> keys = d.getFieldFromAllItems(primaryKey);
 

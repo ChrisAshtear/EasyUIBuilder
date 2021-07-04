@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6226516285635520981}
   - component: {fileID: 6226516285635520983}
   - component: {fileID: 6302867441976142774}
+  - component: {fileID: 5331259166119106092}
   m_Layer: 5
   m_Name: TableRow
   m_TagString: Untagged
@@ -71,6 +72,20 @@ MonoBehaviour:
     spritesheet: {fileID: 0}
   containerObject: {fileID: 6226516287172413926}
   RowCellPrefab: {fileID: 6226516285635520970, guid: 43da326084d59744691acb941c3f8b7d, type: 3}
+--- !u!114 &5331259166119106092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6226516285635520970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a383e9517f61d3643aecfc20dc944c65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackingObject: {fileID: 0}
+  statBarSuffix: 
 --- !u!1 &6226516285865717038
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using System.Collections;
-
+[RequireComponent(typeof(UIDataController))]
 public class UIRowListItem : UIButtonListItem
 {
 
