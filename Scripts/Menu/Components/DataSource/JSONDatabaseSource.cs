@@ -28,44 +28,6 @@ public class JSONDatabaseSource : DatabaseSource
         type = DataType.JSON;
     }
 
-    void StartWebRequest(string url)
-    {
-        var request = WebRequest.Create(url);
-        //request.BeginGetResponse(new AsyncCallback(FinishWebRequest), null);
-        //WebResponse response = await request.GetResponseAsync();
-        //LoadFromString(response.ToString());
-    }
-
-    public async Task<string> DoWebRequest(string url)
-    {
-        HttpWebRequest request = HttpWebRequest.CreateHttp(url);
-
-        WebResponse ws = await request.GetResponseAsync();
-
-        using (Stream dataStream = ws.GetResponseStream())
-        {
-            // Open the stream using a StreamReader for easy access.  
-            StreamReader reader = new StreamReader(dataStream);
-            // Read the content.  
-            string responseFromServer = reader.ReadToEnd();
-
-            LoadFromString(responseFromServer);
-        }
-
-        // Close the response.  
-        ws.Close();
-
-        
-
-        return ws.ResponseUri.ToString(); 
-    }
-
-    void FinishWebRequest(IAsyncResult result)
-    {
-        WebResponse response = webRequest.EndGetResponse(result);
-        LoadFromString(response.ToString());
-    }
-
     public void LoadFromString(string data)
     {
         JObject dat = JObject.Parse(data);
@@ -112,9 +74,7 @@ public class JSONDatabaseSource : DatabaseSource
             if (loadFromURL)
             {
                 string getDataUrl = "https://us-central1-warscrap-c63.cloudfunctions.net/api/" + URL;
-                DoWebRequest(getDataUrl);
-                //StartWebRequest(getDataUrl);
-                //StartCoroutine(RequestWebService());
+                NetUtil.DoWebRequest(getDataUrl, LoadFromString);
             }
             else
             {
