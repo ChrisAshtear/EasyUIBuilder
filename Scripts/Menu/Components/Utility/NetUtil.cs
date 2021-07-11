@@ -32,4 +32,15 @@ public static class NetUtil
 
         return ws.ResponseUri.ToString();
     }
+
+    public static string DictionaryToGetString(Dictionary<string,string> fields)
+    {
+        string args = "?";
+        foreach (KeyValuePair<string,string> field in fields)
+        {
+            args += field.Key + "=" + field.Value + "&";
+        }
+        args = args.TrimEnd(',');
+        return args;
+    }
 }

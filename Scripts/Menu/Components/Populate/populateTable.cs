@@ -12,39 +12,37 @@ using System.Linq;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-[Serializable]
-public class TableProps : DataProps
+public class populateTable : populateData, I_ItemMenu
 {
-    public listFunction onSelect = listFunction.Form;//TODO: convert this to just an intcode that is populated by some script? so it can be used by popTable/popList
-    public listObjProps displayObj;
-
+    
     [Tooltip("Alternate color for odd and even rows")]
     public bool striping = true;
     public bool sortable = true;
     public bool showHeader = true;
-}
-
-public class populateTable : populateData, I_ItemMenu
-{
-
-    public new TableProps props;
+    public Color stripeColorOdd;
+    public Color stripeColorEven;
+    public Color headerColor;
+    [Tooltip("Comma seperated list of fields to display, in that order.")]
+    public string fieldList;
 
     private Dictionary<string, object> preservedData = new Dictionary<string, object>();
 
     public override void Populate()
     {
-
+        Debug.Log(props);
         bool selected = false;
 
         Clear();
-
+        Debug.Log(props);
         DataSource d;
         string primaryKey = "";
         {
             primaryKey = props?.data?.primaryKey;
             d = props?.data;
         }
+        Debug.Log(props);
         if (d == null) { return; }
+        Debug.Log(props);
         bool selectedAnItem = false;
         List<string> keys = d.getFieldFromAllItems(primaryKey);
 
@@ -54,15 +52,16 @@ public class populateTable : populateData, I_ItemMenu
         {
             displayCode = d.displayCode;
         }
-        if(props.displayObj!=null)
+        if(props.detailsContainer != null)
         {
-            UIDisplayCodeController dc = props.displayObj.GetComponent<UIDisplayCodeController>();
+            UIDisplayCodeController dc = props.detailsContainer.GetComponent<UIDisplayCodeController>();
             if (dc != null)
             {
                 dc.displayCode = displayCode;
             }
         }
-        
+
+        bool odd = true;
 
         foreach (string key in keys)
         {
@@ -84,11 +83,15 @@ public class populateTable : populateData, I_ItemMenu
             UIRowListItem listItem = obj.GetComponent<UIRowListItem>();
             d.AddListener(key, listItem.SourceUpdate);
             DataLibrary dat = new DataLibrary(props.data.getObjFromItemID(key));
+
+            if (odd || !striping) { dat.SetValue("bgColor", stripeColorOdd); }
+            else { dat.SetValue("bgColor", stripeColorEven); }
+
             foreach (KeyValuePair<string, object> de in preservedData)
             {
                 dat.SetValue(de.Key, de.Value);
             }
-            listItem.SetData(dat);
+            listItem.SetDataCustomFields(dat,fieldList);
             listItem.Click = OnClick;
             listItem.source = props.data;
             if (!selectedAnItem)
@@ -99,14 +102,18 @@ public class populateTable : populateData, I_ItemMenu
                     selectedAnItem = true;
                 }
             }
-
+            odd = !odd;
         }
 
     }
 
-    public void OnClick(UIButtonListItem listItem)
+    public void NextPage()
     {
-        props.evData.Invoke(listItem.GetData());
+        props.dataS.db.RequestNextSet();
     }
 
+    public void PrevPage()
+    {
+        props.dataS.db.RequestPrevSet();
+    }
 }

@@ -88,7 +88,7 @@ public class XMLDatabaseSource : DatabaseSource
                     table.setReady();
                 }
 
-                Debug.Log(element);
+               // Debug.Log(element);
             }
             if (tables.Count > 0)
             {

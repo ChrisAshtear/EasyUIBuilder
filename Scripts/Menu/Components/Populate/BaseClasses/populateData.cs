@@ -107,6 +107,18 @@ public class FilterDrawer : PropertyDrawer
 }
 #endif
 */
+[Serializable]
+public class DataProps : BaseProps
+{
+    public UnityEvent ev;
+    public UnityEvent<IDataLibrary> evData;
+
+    public string tableName;
+    [HideInInspector]
+    public DataSource data { get { return dataS.db.getTable(dataS.tableName); } }
+    public SourceProps dataS;
+    public GameObject detailsContainer;
+}
 
 public class populateData : populateBase, I_ItemMenu
 {
@@ -125,7 +137,22 @@ public class populateData : populateBase, I_ItemMenu
 
     protected int defaultSelection = -1;
     private Dictionary<string, object> preservedData = new Dictionary<string, object>();
+    void Start()
+    {
+        if (populateOnStart)
+        {
+            Debug.Log(props);
+            if(props.dataS != null)
+            {
+               props.dataS.db.onDataReady += DoPopulate;
+               props.dataS.db.dataChanged += DoPopulate;
+            }
 
+            DoPopulate();
+        }
+        //TODO: add subscriptions for ondatachanged and ondataready
+
+    }
     public void OnClick(UIButtonListItem listItem)
     {
         props.evData.Invoke(listItem.GetData());

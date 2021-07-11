@@ -72,6 +72,7 @@ MonoBehaviour:
     spritesheet: {fileID: 0}
   containerObject: {fileID: 6226516287172413926}
   RowCellPrefab: {fileID: 6226516285635520970, guid: 43da326084d59744691acb941c3f8b7d, type: 3}
+  fieldList: 
 --- !u!114 &5331259166119106092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,6 +244,7 @@ GameObject:
   - component: {fileID: 6226516287635040945}
   - component: {fileID: 6226516287635040947}
   - component: {fileID: 6226516287635040944}
+  - component: {fileID: 8638269454295665642}
   m_Layer: 5
   m_Name: ButtonCenter
   m_TagString: Untagged
@@ -307,3 +309,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.125
+--- !u!114 &8638269454295665642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6226516287635040950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95b1dec78e8e23a4ba3a9c9a1d7de087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldName: bgColor
+  subTypeName: 
+  dataType: 6
+  invert: 0

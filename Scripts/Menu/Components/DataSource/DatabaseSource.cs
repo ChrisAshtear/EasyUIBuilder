@@ -37,6 +37,8 @@ public class DatabaseSource : ScriptableObject
     [HideInInspector]
     public string loadStatus = "unloaded";
 
+    public bool isRemote = false;
+
     //Props
     public DatabaseSource()
     {
@@ -165,6 +167,7 @@ public class DatabaseSource : ScriptableObject
         {
             onDataReady();
         }
+        changedData();
         tableList = new List<string>();
         foreach (DataSource source in tables.Values)
         {
@@ -230,5 +233,16 @@ public class DatabaseSource : ScriptableObject
     public virtual Dictionary<string, fieldType> getFields()
     {
         return new Dictionary<string, fieldType>();
+    }
+
+    //request next data set
+    public virtual void RequestNextSet()
+    {
+
+    }
+
+    public virtual void RequestPrevSet()
+    {
+
     }
 }

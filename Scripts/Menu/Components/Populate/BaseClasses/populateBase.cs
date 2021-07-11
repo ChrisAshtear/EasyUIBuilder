@@ -9,7 +9,7 @@ using UnityEditor;
 
 
 // Custom serializable class
-[Serializable]
+
 public class BaseProps
 {
     public string label = "";
@@ -51,14 +51,7 @@ public class populateBase : MonoBehaviour
         //prefab = ProjectSettings.data.defaultButton;
     }
     // Start is called before the first frame update
-    void OnEnable()
-    {
-        if (populateOnStart)
-        {
-            DoPopulate();
-        }
-
-    }
+    
 
     public virtual void PrePopulate()
     {

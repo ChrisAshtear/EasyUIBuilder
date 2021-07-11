@@ -25,8 +25,8 @@ public class UIDataController : MonoBehaviour
             IData dat = data.GetValue(tag.fieldName);
             GameObject obj = tag.gameObject;
             IData subType = null;
-            Debug.Log("UITag:" + tag.name);
-            Debug.Log("UITagType:" + tag.dataType.ToString());
+            //Debug.Log("UITag:" + tag.name);
+            //Debug.Log("UITagType:" + tag.dataType.ToString());
             if(tag.subTypeName != "")
             {
                 subType = data.GetValue(tag.subTypeName);
@@ -95,7 +95,7 @@ public class UIDataController : MonoBehaviour
                     if (imgToColor != null) { imgToColor.color = (Color)dat.Data; }
                     TMPro.TextMeshProUGUI text = obj.GetComponent<TMPro.TextMeshProUGUI>();
                     if(text != null) { text.color = (Color)dat.Data; }
-                    
+                    if (Application.isEditor) { imgToColor.SetAllDirty(); }
                     break;
 
                 case UIDataType.DataButton:

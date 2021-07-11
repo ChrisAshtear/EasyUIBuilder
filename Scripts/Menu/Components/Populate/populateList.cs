@@ -29,22 +29,10 @@ public class selectListItem
     public string index;//index of selected item
 }
 
-public class DataProps : BaseProps
-{
-    public UnityEvent ev;
-    public UnityEvent<IDataLibrary> evData;
 
-    public string tableName;
-    [HideInInspector]
-    public DataSource data { get { return dataS.db.getTable(dataS.tableName); } }
-    public SourceProps dataS;
-    public string field;
-    public int fieldIdx;
-    public int tableIdx;
-}
 
 // Custom serializable class
-[Serializable]
+//[Serializable]
 public class ListProps : DataProps
 {
     public listFunction onSelect = listFunction.Form;
@@ -78,6 +66,7 @@ public class populateList : populateData, I_ItemMenu
             primaryKey = props?.data?.primaryKey;
             d = props?.data;
         }
+        if (d == null) { return; }
         bool selectedAnItem = false;
         List<string> keys = d.getFieldFromAllItems(primaryKey);
 

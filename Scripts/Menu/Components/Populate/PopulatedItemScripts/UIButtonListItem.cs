@@ -17,7 +17,10 @@ public class UIButtonListItem : MonoBehaviour
 
     private void Awake()
     {
-        button.onClick.AddListener(OnClick);
+        if(button!=null)
+        {
+            button.onClick.AddListener(OnClick);
+        }
     }
 
     private void OnDestroy()
